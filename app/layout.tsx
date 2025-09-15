@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "../theme/ThemeContext";
+import ScrollWrapper, { OptimizedScrollWrapper } from "../components/ScrollWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +29,26 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider>
+          <div className="min-h-screen bg-[linear-gradient(to_bottom_right,var(--color-bg-from),var(--color-bg-via),var(--color-bg-to))] text-[var(--color-white)] overflow-x-hidden">
+            {/* Animated background blobs */}
+            {/* <div className="fixed inset-0 overflow-hidden pointer-events-none">
+              <div
+                className="absolute -top-40 -right-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"
+                style={{ backgroundColor: "var(--color-blob-purple)" }}
+              ></div>
+              <div
+                className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"
+                style={{ backgroundColor: "var(--color-blob-cyan)" }}
+              ></div>
+              <div
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"
+                style={{ backgroundColor: "var(--color-blob-pink)" }}
+              ></div>
+            </div> */}
+            <OptimizedScrollWrapper>{children}</OptimizedScrollWrapper>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

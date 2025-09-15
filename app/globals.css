@@ -1,26 +1,277 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* global.css */
+
+:root,
+[data-theme="default"] {
+  --color-bg-from: #0f172a; /* slate-900 */
+  --color-bg-via: #6d28d9; /* purple-900 */
+  --color-bg-to: #0f172a; /* slate-900 */
+  --color-white: #fff;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e2e8f0; /* slate-200 */
+  --color-header-blur: rgba(15, 23, 42, 0.9);
+  --color-header-border: rgba(255, 255, 255, 0.1);
+  --color-header-gradient: linear-gradient(
+    to right,
+    #22d3ee,
+    #a21caf,
+    #ec4899
+  ); /* cyan-purple-pink */
+  --color-brand-gradient: linear-gradient(
+    to right,
+    #22d3ee,
+    #a21caf,
+    #ec4899
+  ); /* StreamHub logo */
+  --color-movie-gradient: linear-gradient(
+    to right,
+    #ec4899,
+    #f43f5e
+  ); /* pink-rose */
+  --color-series-gradient: linear-gradient(
+    to right,
+    #a21caf,
+    #6366f1
+  ); /* purple-indigo */
+  --color-people-gradient: linear-gradient(
+    to right,
+    #f59e0b,
+    #fb923c
+  ); /* amber-orange */
+  --color-blob-purple: #a21caf; /* purple-600 */
+  --color-blob-cyan: #22d3ee; /* cyan-400 */
+  --color-blob-pink: #ec4899; /* pink-500 */
+
+  /* Theme switch button colors */
+  --color-switch-bg: rgba(255, 255, 255, 0.1);
+  --color-switch-border: rgba(255, 255, 255, 0.2);
+  --color-switch-text: #ffffff;
+  --color-switch-hover: rgba(255, 255, 255, 0.2);
+  --color-switch-active: rgba(255, 255, 255, 0.3);
+
+  transition: all 0.3s ease;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="sunset"] {
+  --color-bg-from: #7c2d12; /* red-900 - much darker for better contrast */
+  --color-bg-via: #dc2626; /* red-600 - deeper red */
+  --color-bg-to: #451a03; /* amber-900 - very dark amber */
+  --color-white: #fff;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #fef3c7; /* amber-100 - warm light text */
+  --color-header-blur: rgba(124, 45, 18, 0.95); /* darker blur */
+  --color-header-border: rgba(254, 243, 199, 0.2); /* warm border */
+  --color-header-gradient: linear-gradient(
+    to right,
+    #dc2626,
+    #ea580c,
+    #d97706
+  ); /* red-orange-amber */
+  --color-brand-gradient: linear-gradient(to right, #dc2626, #ea580c, #d97706);
+  --color-movie-gradient: linear-gradient(
+    to right,
+    #dc2626,
+    #ea580c
+  ); /* red-orange */
+  --color-series-gradient: linear-gradient(
+    to right,
+    #dc2626,
+    #c2410c
+  ); /* red-orange */
+  --color-people-gradient: linear-gradient(
+    to right,
+    #d97706,
+    #ea580c
+  ); /* amber-orange */
+  --color-blob-purple: #dc2626; /* red-600 */
+  --color-blob-cyan: #ea580c; /* orange-600 */
+  --color-blob-pink: #c2410c; /* orange-700 */
+
+  /* Theme switch button colors for sunset */
+  --color-switch-bg: rgba(254, 243, 199, 0.15);
+  --color-switch-border: rgba(254, 243, 199, 0.3);
+  --color-switch-text: #fef3c7;
+  --color-switch-hover: rgba(254, 243, 199, 0.25);
+  --color-switch-active: rgba(254, 243, 199, 0.4);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-bg-from: #0f172a;
+    --color-bg-via: #6d28d9;
+    --color-bg-to: #0f172a;
+    --color-white: #fff;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #e2e8f0;
   }
 }
 
+.theme-gradient {
+  background: linear-gradient(
+    to bottom right,
+    var(--color-bg-from),
+    var(--color-bg-via),
+    var(--color-bg-to)
+  );
+}
+
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(
+    to bottom right,
+    var(--color-bg-from),
+    var(--color-bg-via),
+    var(--color-bg-to)
+  );
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+/* Theme switch button styles */
+.theme-switch {
+  background: var(--color-switch-bg);
+  border: 1px solid var(--color-switch-border);
+  color: var(--color-switch-text);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.theme-switch:hover {
+  background: var(--color-switch-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.theme-switch:active {
+  background: var(--color-switch-active);
+  transform: translateY(0);
+}
+
+/* Modern glassmorphism effect for cards and components */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced blob animations for better performance */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.theme-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to  bottom right,
+    var(--color-bg-from) 0%,
+    var(--color-bg-via) 50%,
+    var(--color-bg-to) 100%
+  );
+  opacity: 0.3;
+}
+
+/* Header */
+
+/* Header background transitions */
+.header-default {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.header-scrolled {
+  background: var(--color-header-blur);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-header-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+/* Enhanced blob animations for better performance */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Improved header transition states for different themes */
+[data-theme="default"] {
+  --color-header-blur: rgba(15, 23, 42, 0.8);
+  --color-header-border: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="sunset"] {
+  --color-header-blur: rgba(124, 45, 18, 0.85);
+  --color-header-border: rgba(254, 243, 199, 0.2);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Performance optimization for animations */
+.animate-blob {
+  will-change: transform;
+  transform: translateZ(0);
 }

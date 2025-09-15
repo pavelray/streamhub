@@ -1,0 +1,259 @@
+/* Header.module.css */
+
+/* Header background transitions */
+.headerDefault {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.headerScrolled {
+  background: var(--color-header-blur);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-header-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 0 1px var(--color-header-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Header container */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 0.75rem 1rem;
+}
+
+.headerContainer {
+  max-width: 80rem; /* 7xl */
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo section */
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logoIcon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(
+    to right,
+    var(--color-blob-cyan),
+    var(--color-blob-purple)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoText {
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.brandText {
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(
+    to right,
+    var(--color-blob-cyan),
+    var(--color-blob-purple)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Navigation */
+.navigation {
+  display: none;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .navigation {
+    display: flex;
+  }
+}
+
+.navLink {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: 500;
+  position: relative;
+}
+
+.navLink:hover {
+  color: var(--color-blob-cyan);
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 50%;
+  background: var(--color-blob-cyan);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+/* Movies link hover effect */
+.navLink:nth-child(2):hover {
+  color: var(--color-blob-purple);
+}
+
+.navLink:nth-child(2)::after {
+  background: var(--color-blob-purple);
+}
+
+/* Series link hover effect */
+.navLink:nth-child(3):hover {
+  color: var(--color-blob-pink);
+}
+
+.navLink:nth-child(3)::after {
+  background: var(--color-blob-pink);
+}
+
+/* Actions section */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Mobile menu button */
+.mobileMenuButton {
+  display: block;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.mobileMenuButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+  .mobileMenuButton {
+    display: none;
+  }
+}
+
+.menuIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Gradient border effect */
+.gradientBorder {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-header-gradient);
+  opacity: 0.5;
+  animation: gradientShimmer 3s ease-in-out infinite;
+}
+
+@keyframes gradientShimmer {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Focus styles for accessibility */
+.navLink:focus,
+.mobileMenuButton:focus {
+  outline: 2px solid var(--color-blob-cyan);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Active/current page indicator */
+.navLinkActive {
+  color: var(--color-blob-cyan);
+}
+
+.navLinkActive::after {
+  width: 100%;
+}
+
+/* Loading animation for initial render */
+.headerLoading {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: slideInHeader 0.5s ease-out forwards;
+}
+
+@keyframes slideInHeader {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .header {
+    padding: 0.5rem 1rem;
+  }
+
+  .logoIcon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .logoText {
+    font-size: 0.75rem;
+  }
+
+  .brandText {
+    font-size: 1.125rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .headerScrolled {
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 2px solid var(--color-text-primary);
+  }
+
+  .navLink:hover {
+    text-decoration: underline;
+  }
+}
+
+
