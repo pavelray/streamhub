@@ -2,15 +2,17 @@
 import { useState } from "react";
 import { Film, Tv, TrendingUp, User, Search } from 'lucide-react'; // adjust as necessary
 import ThemeSwitchButton from "../ThemeSwitchButton"; // as per previous instructions
+import { link } from "fs";
+import Link from "next/link";
 
 export default function Header({ isScrolled }: { isScrolled: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navItems = [
-    { name: "Movies", icon: Film },
-    { name: "TV Series", icon: Tv },
-    { name: "Discover", icon: TrendingUp },
-    { name: "About", icon: User },
+    { name: "Movies", icon: Film, link: "/movies" },
+    { name: "TV Series", icon: Tv, link: "/tv-series" },
+    { name: "Discover", icon: TrendingUp, link: "/discover" },
+    { name: "About", icon: User, link: "/about" },
   ];
 
   return (
@@ -26,7 +28,7 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
               className="text-2xl font-bold bg-clip-text text-transparent inline-block"
               style={{ backgroundImage: "var(--color-brand-gradient)" }}
             >
-              StreamHub
+              <Link href="/">StreamHub</Link>
             </h1>
           </div>
 

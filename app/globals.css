@@ -275,3 +275,24 @@ html {
   will-change: transform;
   transform: translateZ(0);
 }
+
+
+/* .movie-details-bg {
+  background: var(--color-movie-gradient);
+  min-height: 100vh;
+}
+
+.glass-card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.genre-chip {
+  background: linear-gradient(to right, var(--color-movie-gradient));
+  color: var(--color-white);
+  border-radius: 20px;
+  padding: 4px 12px;
+  margin: 2px;
+  font-size: 0.95em;
+} */

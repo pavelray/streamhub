@@ -6,9 +6,8 @@ import { TrendingMovie, TrendingPerson, TrendingResponse, TrendingTV } from "@/l
 import { TIME_FRAME, TMDB_API_URL } from "@/utils/constants";
 import { Play } from "lucide-react";
 
-// Here I want to call 3 api for trending movies, tv series and people
-// Then I will randomly select either a movie or tv series to display in the landing header
 
+// Function to fetch all data concurrently with revalidation
 const getAllData = async (): Promise<{
   movieList: TrendingResponse;
   tvList: TrendingResponse;
