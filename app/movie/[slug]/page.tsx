@@ -1,40 +1,17 @@
+import { MovieDetails } from "@/lib/MovieDetails";
 import { TMDB_API_URL } from "@/utils/constants";
+import { movieDataTransformer } from "@/utils/dataTransformer";
+import {
+  Calendar,
+  Clock,
+  Play,
+  Star,
+  Tag,
+  TrendingUp,
+  Video,
+} from "lucide-react";
+import Image from "next/image";
 
-export interface MovieDetails {
-  id: number;
-  title: string;
-  originalTitle: string;
-  overview: string;
-  tagline?: string;
-  status: string;
-  posterPath: string;
-  backdropPath?: string;
-  genres: { id: number; name: string }[];
-  releaseDate: string;
-  runtime: number;
-  voteAverage: number;
-  voteCount: number;
-  popularity: number;
-  homepage?: string;
-  productionCompanies: {
-    id: number;
-    name: string;
-    logoPath?: string;
-    originCountry: string;
-  }[];
-  cast?: {
-    id: number;
-    name: string;
-    character: string;
-    profilePath?: string;
-  }[];
-  videos?: {
-    key: string;
-    name: string;
-    site: string;
-    type: string;
-  }[];
-}
 const append_to_response =
   "videos,images,credits,recommendations,similar,watch_providers";
 const getMovieDetailsData = async (
@@ -52,44 +29,7 @@ const getMovieDetailsData = async (
     }
 
     const movieData = await movieRes.json();
-
-    const movieDetails: MovieDetails = {
-      id: movieData.id,
-      title: movieData.title,
-      originalTitle: movieData.original_title,
-      overview: movieData.overview,
-      tagline: movieData.tagline,
-      status: movieData.status,
-      posterPath: movieData.poster_path
-        ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}`
-        : "/placeholder_poster.png",
-      backdropPath: movieData.backdrop_path
-        ? `https://image.tmdb.org/t/p/original${movieData.backdrop_path}`
-        : undefined,
-      genres: movieData.genres,
-      releaseDate: movieData.release_date,
-      runtime: movieData.runtime,
-      voteAverage: movieData.vote_average,
-      voteCount: movieData.vote_count,
-      popularity: movieData.popularity,
-      homepage: movieData.homepage,
-      productionCompanies: movieData.production_companies,
-      cast: movieData.credits?.cast.map((actor: any) => ({
-        id: actor.id,
-        name: actor.name,
-        character: actor.character,
-        profilePath: actor.profile_path
-          ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-          : undefined,
-      })),
-      videos: movieData.videos?.results.map((video: any) => ({
-        key: video.key,
-        name: video.name,
-        site: video.site,
-        type: video.type,
-      })),
-    };
-
+    const movieDetails = movieDataTransformer(movieData);
     return movieDetails;
   } catch (error) {
     console.error("Error fetching movie details:", error);
@@ -105,87 +45,162 @@ const MovieDetailsPage = async ({
   const { slug } = await params;
   const movie = await getMovieDetailsData(slug);
   console.log("Movie Details:", movie);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+    });
+  };
+
   if (!movie) {
     return <div className="text-center text-white mt-20">Movie not found</div>;
   }
   return (
-    <main className="theme-gradient min-h-screen px-4 py-10">
-      {/* Banner & Poster */}
-      <section className="flex flex-col md:flex-row items-center gap-8">
-        <div className="glass-effect rounded-2xl shadow-lg overflow-hidden w-56 min-h-[336px] flex-shrink-0">
-          <img
-            src={movie.posterPath}
-            alt={movie.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div>
-          <h1 className="text-4xl font-bold mb-2 text-white">{movie.title}</h1>
-          {movie.tagline && (
-            <div className="text-xl italic mb-3 text-pink-300">
-              {movie.tagline}
+    <div className="min-h-screen">
+      <section
+        className="movie-hero min-h-screen flex items-center"
+        style={{
+          backgroundImage: `linear-gradient(to right,rgba(0, 0, 0, 0.8),rgba(0, 0, 0, 0.4),rgba(0, 0, 0, 0.8)),url(${movie.backdropPath})`,
+        }}
+      >
+        <div className="container mx-auto px-6 lg:px-8 mt-20">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            {/* Movie Poster */}
+            <div className="lg:w-1/3 fade-in-up">
+              <div className="glass-effect rounded-2xl p-4">
+                <Image
+                  src={movie.posterPath}
+                  alt={`${movie.title} Poster`}
+                  width={600}
+                  height={900}
+                  className="w-full rounded-xl shadow-2xl"
+                  priority
+                />
+              </div>
             </div>
-          )}
-          <div className="flex flex-wrap gap-2 mb-2">
-            {movie.genres.map((genre) => (
-              <span key={genre.id} className="genre-chip">
-                {genre.name}
-              </span>
-            ))}
+
+            {/* Movie Details */}
+            <div className="lg:w-2/3 fade-in-up">
+              <h1 className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+                {movie.title}
+              </h1>
+              <h4 className="text-lg font-bold text-gray-300 mb-4 italic">{movie.tagline}</h4>
+              <p className="text-lg lg:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl">
+                {movie.overview}
+              </p>
+
+              {/* Stats Section */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div className="stat-item rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-white flex items-center justify-center gap-2">
+                    <Calendar className="inline-block w-6 h-6" />{" "}
+                    {formatDate(movie.releaseDate)}
+                  </div>
+                  <div className="text-sm text-gray-300">Release Year</div>
+                </div>
+                <div className="stat-item rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-yellow-400 flex items-center justify-center gap-2">
+                    <Star className="inline-block w-6 h-6" />{" "}
+                    {movie.voteAverage.toFixed(1)}
+                  </div>
+                  <div className="text-sm text-gray-300">Rating</div>
+                </div>
+                <div className="stat-item rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-green-400 flex items-center justify-center gap-2">
+                    <TrendingUp className="inline-block w-6 h-6" />{" "}
+                    {Math.floor(movie.popularity)}
+                  </div>
+                  <div className="text-sm text-gray-300">Popularity</div>
+                </div>
+                <div className="stat-item rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-400 flex items-center justify-center gap-2">
+                    <Clock className="inline-block w-6 h-6" /> {movie.runtime}
+                  </div>
+                  <div className="text-sm text-gray-300">Runtime</div>
+                </div>
+              </div>
+
+              {/* Genres */}
+              <div className="mb-8 gap-2 flex flex-wrap">
+                {movie.genres.map((genre, index) => (
+                  <div
+                    key={index}
+                    className={`inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-semibold backdrop-blur-sm transition-all duration-300 hover:scale-105 ${
+                      index === 0
+                        ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/50 text-purple-200"
+                        : "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/50 text-cyan-200"
+                    }`}
+                  >
+                    <Tag className="w-4 h-4" />
+                    <span>{genre.name}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                <button
+                  className="cursor-pointer group px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                  style={{
+                    background: "var(--color-header-gradient)",
+                  }}
+                >
+                  <span className="flex items-center justify-center gap-2 text-[var(--color-white)]">
+                    <Play className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                    Watch Now
+                  </span>
+                </button>
+
+                <button className="cursor-pointer group inline-flex items-center gap-3 px-8 py-4 font-bold text-white bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:border-white/50 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <Video className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+                  Play Trailer
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-8 text-secondary font-semibold mb-4">
-            <span>Release: {movie.releaseDate}</span>
-            <span>Runtime: {movie.runtime} min</span>
-            <span>Rating: {movie.voteAverage} / 10</span>
-          </div>
-          <a
-            href={movie.homepage}
-            target="_blank"
-            rel="noopener"
-            className="theme-switch px-4 py-2 rounded-lg"
-          >
-            Official Website
-          </a>
         </div>
       </section>
 
-      {/* Overview Section */}
-      <section className="glass-effect p-6 mt-8 rounded-xl max-w-2xl mx-auto text-lg text-secondary">
-        {movie.overview}
-      </section>
+      {/* Cast Section */}
+      <section className="py-16 px-6 lg:px-8">
+        <div className="container mx-auto">
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="section-title text-4xl lg:text-5xl">Cast & Crew</h2>
+            <a
+              href="#"
+              className="text-cyan-400 hover:text-cyan-300 transition-colors text-lg font-medium"
+            >
+              View All →
+            </a>
+          </div>
 
-      {/* Cast Grid */}
-      {movie.cast && (
-        <section className="mt-10">
-          <h2 className="text-2xl mb-6 text-white font-bold">Cast</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-            {movie.cast.slice(0, 10).map((actor) => (
-              <div
-                key={actor.id}
-                className="glass-effect rounded-xl p-3 flex flex-col items-center"
-              >
-                {actor.profilePath && (
-                  <img
-                    src={actor.profilePath}
-                    alt={actor.name}
-                    className="w-20 h-20 rounded-full mb-2 object-cover"
-                  />
-                )}
-                <span className="font-semibold text-white">{actor.name}</span>
-                <span className="text-secondary text-sm">
-                  {actor.character}
-                </span>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {movie.cast?.slice(0, 5).map((member) => (
+              <div key={member.id} className="cast-card rounded-xl p-4">
+                <Image
+                  src={member.profilePath || "/placeholder_profile.png"}
+                  alt={member.name}
+                  width={300}
+                  height={400}
+                  className="w-full h-48 object-cover rounded-lg mb-4"
+                />
+                <h3 className="text-white font-semibold mb-1">{member.name}</h3>
+                <p className="text-gray-400 text-sm">{member.character}</p>
               </div>
             ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {/* Video Previews */}
-      {movie.videos && movie.videos.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-2xl mb-6 text-white font-bold">Videos</h2>
-          <div className="flex overflow-x-auto gap-4">
+      {/* Videos Section */}
+      <section className="py-16 px-6 lg:px-8">
+        <div className="container mx-auto">
+          <h2 className="section-title text-4xl lg:text-5xl mb-12">
+            Videos & Trailers
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {movie.videos.map((video) => (
               <div
                 key={video.key}
@@ -207,25 +222,51 @@ const MovieDetailsPage = async ({
               </div>
             ))}
           </div>
-        </section>
-      )}
-    </main>
+        </div>
+      </section>
+
+      {/* Recommended Section */}
+      <section className="py-16 px-6 lg:px-8">
+        <div className="container mx-auto">
+          <h2 className="section-title text-4xl lg:text-5xl mb-12">
+            You Might Also Like
+          </h2>
+
+          {/* Placeholder for movie cards */}
+          <div className="glass-effect rounded-2xl p-8">
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <div className="w-24 h-24 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <svg
+                    className="w-12 h-12 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10a2 2 0 012 2v12a2 2 0 01-2-2V6a2 2 0 012-2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">
+                  Movie Cards Placeholder
+                </h3>
+                <p className="text-gray-400 text-lg">
+                  Your existing movie card component will be rendered here
+                </p>
+                <div className="mt-6 inline-block px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg font-medium">
+                  Replace with MovieCard Component
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 };
 
 export default MovieDetailsPage;
-
-// Genre Chip Example Styles (matches global theming)
-/*
-.genre-chip {
-  background: linear-gradient(to right, var(--color-movie-gradient));
-  color: var(--color-white);
-  border-radius: 20px;
-  padding: 4px 12px;
-  margin: 2px;
-  font-size: 0.95em;
-}
-*/
-// Glass effect, theme-gradient, theme-switch CSS all come from globals.css[files:3]
-
-/* Extract any section (cast, videos, overview, banner) into its own component for easy reuse/update */
