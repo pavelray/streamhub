@@ -1,3 +1,5 @@
+import TrailerButton from "@/components/TrailerButton";
+import VideoCard from "@/components/VideoCard";
 import { MovieDetails } from "@/lib/MovieDetails";
 import { TMDB_API_URL } from "@/utils/constants";
 import { movieDataTransformer } from "@/utils/dataTransformer";
@@ -85,7 +87,9 @@ const MovieDetailsPage = async ({
               <h1 className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
                 {movie.title}
               </h1>
-              <h4 className="text-lg font-bold text-gray-300 mb-4 italic">{movie.tagline}</h4>
+              <h4 className="text-lg font-bold text-gray-300 mb-4 italic">
+                {movie.tagline}
+              </h4>
               <p className="text-lg lg:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl">
                 {movie.overview}
               </p>
@@ -152,10 +156,7 @@ const MovieDetailsPage = async ({
                   </span>
                 </button>
 
-                <button className="cursor-pointer group inline-flex items-center gap-3 px-8 py-4 font-bold text-white bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:border-white/50 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                  <Video className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                  Play Trailer
-                </button>
+                {movie?.videos && <TrailerButton videos={movie.videos} />}
               </div>
             </div>
           </div>
@@ -201,25 +202,8 @@ const MovieDetailsPage = async ({
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {movie.videos.map((video) => (
-              <div
-                key={video.key}
-                className="glass-effect rounded-xl p-4 min-w-[320px]"
-              >
-                <iframe
-                  width="280"
-                  height="160"
-                  src={`https://www.youtube.com/embed/${video.key}`}
-                  title={video.name}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-                <div className="font-semibold mt-2 text-white">
-                  {video.name}
-                </div>
-                <div className="text-secondary text-sm">{video.type}</div>
-              </div>
+            {movie?.videos?.map((video) => (
+              <VideoCard key={video.key} video={video} />
             ))}
           </div>
         </div>
