@@ -51,7 +51,6 @@ const CastAndCrewPage = async ({
 }) => {
   const { slug } = await params;
   const castAndCrew = await getMovieCastAndCrewData(slug);
-  console.log(castAndCrew?.crew);
 
   if (!castAndCrew) {
     return <div className="text-center text-white mt-20">Cast And Crew details not found</div>;

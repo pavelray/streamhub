@@ -54,6 +54,8 @@ export const movieDataTransformer = (movieData: any) => {
         site: video.site,
         type: video.type,
       })),
+    recommendations: movieData.recommendations.results,
+    similar: movieData.similar.results,
   };
   return movieDetails;
 };

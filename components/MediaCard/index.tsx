@@ -11,7 +11,7 @@ import {
   Tv,
   User,
 } from "lucide-react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const MediaCard = ({
@@ -67,10 +67,17 @@ const MediaCard = ({
     } else if (item.media_type === "person") {
       basePath = `/person`;
     }
-    console.log(`Navigating to ${basePath}/${id}`);
     router.push(`${basePath}/${id}`);
   };
 
+  const renderMediaTypeIcon = (mediaType: "movie" | "tv" | "person") => {
+    const mediaTypeIconMapper = {
+      movie: <Film className="w-2.5 h-2.5 text-white" />,
+      tv: <Tv className="w-2.5 h-2.5 text-white" />,
+      person: <User className="w-2.5 h-2.5 text-white" />,
+    };
+    return mediaTypeIconMapper[mediaType] || "";
+  };
 
   return (
     <div
@@ -103,13 +110,7 @@ const MediaCard = ({
             {/* Floating Elements - Smaller for compact design */}
             <div className="absolute top-2 left-2 right-2 flex justify-between items-start">
               <div className="bg-black/30 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1">
-                {item.media_type === "movie" ? (
-                  <Film className="w-2.5 h-2.5 text-white" />
-                ) : item.media_type === "tv" ? (
-                  <Tv className="w-2.5 h-2.5 text-white" />
-                ) : (
-                  <User className="w-2.5 h-2.5 text-white" />
-                )}
+                {renderMediaTypeIcon(item.media_type)}
                 <span className="text-white text-xs font-medium capitalize">
                   {item.media_type}
                 </span>

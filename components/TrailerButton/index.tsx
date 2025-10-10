@@ -36,7 +36,7 @@ const TrailerButton = ({ videos }: TrailerButtonProps) => {
         onClose={() => setIsModalOpen(false)}
         videoKey={trailer.key}
         videoName={trailer.name}
-        videoType={trailer.type}
+        videoType="trailer"
       />
     </>
   );

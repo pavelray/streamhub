@@ -4,9 +4,9 @@ import { X } from "lucide-react";
 interface VideoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  videoKey: string;
+  videoKey: string | number;
   videoName: string;
-  videoType: string;
+  videoType: "trailer" | "media";
 }
 
 const VideoModal = ({
@@ -17,6 +17,16 @@ const VideoModal = ({
   videoType,
 }: VideoModalProps) => {
   if (!isOpen) return null;
+  const getVideoSource = () => {
+    switch (videoType) {
+      case "trailer":
+        return `https://www.youtube.com/embed/${videoKey}?autoplay=1`;
+      case "media":
+        return `https://www.2embed.cc/embed/${videoKey}?autoplay=1`;
+      default:
+        return `https://www.youtube.com/embed/${videoKey}?autoplay=1`;
+    }
+  };
 
   return (
     <div
@@ -41,7 +51,7 @@ const VideoModal = ({
           <iframe
             width="100%"
             height="100%"
-            src={`https://www.youtube.com/embed/${videoKey}?autoplay=1`}
+            src={getVideoSource()}
             title={videoName}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -53,7 +63,6 @@ const VideoModal = ({
         {/* Video Title Below Player */}
         <div className="mt-4 text-center">
           <h3 className="text-xl font-semibold text-white">{videoName}</h3>
-          <p className="text-gray-400 text-sm mt-1">{videoType}</p>
         </div>
       </div>
     </div>

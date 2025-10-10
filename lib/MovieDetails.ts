@@ -1,3 +1,5 @@
+import { TrendingItem, TrendingResponse } from "./Trending";
+
 export enum VIDEO_TYPE {
   Featurette = "Featurette",
   Teaser = "Teaser",
@@ -77,4 +79,6 @@ export interface MovieDetails {
     site: string;
     type: VideoType;
   }[];
+  recommendations: TrendingItem[],
+  similar: TrendingItem[],
 }

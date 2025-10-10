@@ -1,7 +1,9 @@
+import MediaPlayButton from "@/components/MediaPlayButton";
 import TrailerButton from "@/components/TrailerButton";
+import TrendingCarousel from "@/components/TrendingCarousel";
 import VideoCard from "@/components/VideoCard";
-import YouTubeThumbnail from "@/components/YoutubeThumbnail";
-import { MovieDetails, VIDEO_TYPE } from "@/lib/MovieDetails";
+import { MovieDetails } from "@/lib/MovieDetails";
+import { TrendingItem } from "@/lib/Trending";
 import { TMDB_API_URL } from "@/utils/constants";
 import { movieDataTransformer } from "@/utils/dataTransformer";
 import { convertMinutesToReadable } from "@/utils/helperMethods";
@@ -14,7 +16,6 @@ import {
   Tag,
   TrendingUp,
   User,
-  Video,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,15 +32,12 @@ const getMovieDetailsData = async (
       url,
       { next: { revalidate: 86400 } } // Revalidate every 24 hours
     );
-    console.log(url);
-
     if (!movieRes.ok) {
       console.error("Failed to fetch movie details");
       return null;
     }
 
     const movieData = await movieRes.json();
-    // console.log(movieData.credits?.crew);
     const movieDetails = movieDataTransformer(movieData);
     return movieDetails;
   } catch (error) {
@@ -55,8 +53,7 @@ const MovieDetailsPage = async ({
 }) => {
   const { slug } = await params;
   const movie = await getMovieDetailsData(slug);
-  console.log(movie?.crew);
-
+  console.log("Movie Details:", movie);
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -157,7 +154,7 @@ const MovieDetailsPage = async ({
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link href={`/movie/${movie.id}/watch`}>
+                {/* <Link href={`/movie/${movie.id}/watch`}>
                   <button
                     className="cursor-pointer group px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
                     style={{
@@ -169,7 +166,10 @@ const MovieDetailsPage = async ({
                       Watch Now
                     </span>
                   </button>
-                </Link>
+                </Link> */}
+                <MediaPlayButton
+                  media={{ id: movie.id, name: movie.originalTitle }}
+                />
                 {movie?.videos && <TrailerButton videos={movie.videos} />}
               </div>
             </div>
@@ -268,45 +268,28 @@ const MovieDetailsPage = async ({
       </section>
 
       {/* Recommended Section */}
-      <section className="py-16 px-6 lg:px-8">
-        <div className="container mx-auto">
-          <h2 className="section-title text-4xl lg:text-5xl mb-12">
-            You Might Also Like
-          </h2>
-
-          {/* Placeholder for movie cards */}
-          <div className="glass-effect rounded-2xl p-8">
-            <div className="flex items-center justify-center h-64">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-r from-cyan-400 to-purple-600 rounded-full flex items-center justify-center mb-4 mx-auto">
-                  <svg
-                    className="w-12 h-12 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m-9 0h10a2 2 0 012 2v12a2 2 0 01-2-2V6a2 2 0 012-2z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">
-                  Movie Cards Placeholder
-                </h3>
-                <p className="text-gray-400 text-lg">
-                  Your existing movie card component will be rendered here
-                </p>
-                <div className="mt-6 inline-block px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg font-medium">
-                  Replace with MovieCard Component
-                </div>
-              </div>
-            </div>
+      {movie.recommendations && !!movie.recommendations.length && (
+        <section className="py-16 px-6 lg:px-8">
+          <div className="container mx-auto">
+            <h2 className="section-title text-4xl lg:text-5xl mb-6">
+              Recommended For You
+            </h2>
+            <TrendingCarousel
+              trendingItems={movie.recommendations as TrendingItem[]}
+            />
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+      {movie.similar && !!movie.similar.length && (
+        <section className="py-16 px-6 lg:px-8">
+          <div className="container mx-auto">
+            <h2 className="section-title text-4xl lg:text-5xl mb-6">
+              More Like This
+            </h2>
+            <TrendingCarousel trendingItems={movie.similar as TrendingItem[]} />
+          </div>
+        </section>
+      )}
     </div>
   );
 };
