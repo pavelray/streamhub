@@ -1,8 +1,10 @@
 import TrailerButton from "@/components/TrailerButton";
 import VideoCard from "@/components/VideoCard";
-import { MovieDetails } from "@/lib/MovieDetails";
+import YouTubeThumbnail from "@/components/YoutubeThumbnail";
+import { MovieDetails, VIDEO_TYPE } from "@/lib/MovieDetails";
 import { TMDB_API_URL } from "@/utils/constants";
 import { movieDataTransformer } from "@/utils/dataTransformer";
+import { convertMinutesToReadable } from "@/utils/helperMethods";
 import {
   Calendar,
   Clock,
@@ -20,10 +22,12 @@ const getMovieDetailsData = async (
   movieId: string
 ): Promise<MovieDetails | null> => {
   try {
+    const url = `${TMDB_API_URL}/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=${append_to_response}`;
     const movieRes = await fetch(
-      `${TMDB_API_URL}/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=${append_to_response}`,
+      url,
       { next: { revalidate: 86400 } } // Revalidate every 24 hours
     );
+    console.log(url);
 
     if (!movieRes.ok) {
       console.error("Failed to fetch movie details");
@@ -31,6 +35,7 @@ const getMovieDetailsData = async (
     }
 
     const movieData = await movieRes.json();
+    // console.log(movieData.credits?.crew);
     const movieDetails = movieDataTransformer(movieData);
     return movieDetails;
   } catch (error) {
@@ -46,7 +51,7 @@ const MovieDetailsPage = async ({
 }) => {
   const { slug } = await params;
   const movie = await getMovieDetailsData(slug);
-  console.log("Movie Details:", movie);
+  console.log(movie?.crew);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -95,7 +100,7 @@ const MovieDetailsPage = async ({
               </p>
 
               {/* Stats Section */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <div className="stat-item rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-white flex items-center justify-center gap-2">
                     <Calendar className="inline-block w-6 h-6" />{" "}
@@ -119,9 +124,45 @@ const MovieDetailsPage = async ({
                 </div>
                 <div className="stat-item rounded-lg p-4 text-center">
                   <div className="text-2xl font-bold text-blue-400 flex items-center justify-center gap-2">
-                    <Clock className="inline-block w-6 h-6" /> {movie.runtime}
+                    <Clock className="inline-block w-6 h-6" />{" "}
+                    {convertMinutesToReadable(movie.runtime)}
                   </div>
                   <div className="text-sm text-gray-300">Runtime</div>
+                </div>
+              </div> */}
+              <div className="flex flex-wrap gap-6 text-sm font-medium mb-8">
+                <div className="flex items-center gap-2 px-3 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/20">
+                  <Calendar className="w-4 h-4 text-cyan-400" />
+                  <span className="text-cyan-400 font-bold">
+                    {formatDate(movie.releaseDate)}
+                  </span>
+                  <span className="text-gray-300">Release</span>
+                </div>
+
+                <div className="flex items-center gap-2 px-3 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/20">
+                  <Star
+                    className="w-4 h-4 text-yellow-400"
+                    fill="currentColor"
+                  />
+                  <span className="text-yellow-400 font-bold">
+                    {movie.voteAverage.toFixed(1)}
+                  </span>
+                  <span className="text-gray-300">Rating</span>
+                </div>
+
+                <div className="flex items-center gap-2 px-3 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/20">
+                  <TrendingUp className="w-4 h-4 text-pink-400" />
+                  <span className="text-pink-400 font-bold">
+                    {Math.floor(movie.popularity)}
+                  </span>
+                  <span className="text-gray-300">Popularity</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/20">
+                  <Clock className="inline-block w-6 h-6" />{" "}
+                  <span className="text-pink-400 font-bold">
+                    {convertMinutesToReadable(movie.runtime)}
+                  </span>
+                  <span className="text-gray-300">Runtime</span>
                 </div>
               </div>
 

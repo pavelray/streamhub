@@ -24,7 +24,7 @@ export const MOVIE_GENRES: { [key: number]: string } = {
   10770: "TV Movie",
   53: "Thriller",
   10752: "War",
-  37: "Western"
+  37: "Western",
 };
 
 export const TV_GENRES: { [key: number]: string } = {
@@ -43,5 +43,8 @@ export const TV_GENRES: { [key: number]: string } = {
   10766: "Soap",
   10767: "Talk",
   10768: "War & Politics",
-  37: "Western"
+  37: "Western",
 };
+
+export const FALLBACK_VIDEO_THUMBNAIL =
+  "https://via.placeholder.com/480x360?text=No+Thumbnail";

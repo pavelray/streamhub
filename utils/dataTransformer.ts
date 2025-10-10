@@ -30,6 +30,15 @@ export const movieDataTransformer = (movieData: any) => {
         ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
         : undefined,
     })),
+    crew: movieData.credits?.crew.map((member: any) => ({
+      id: member.id,
+      name: member.name,
+      job: member.job,
+      department: member.department,
+      profilePath: member.profile_path
+        ? `https://image.tmdb.org/t/p/w200${member.profile_path}`
+        : undefined,
+    })),
     videos: movieData.videos?.results
       .filter((video: any) => video.type === "Trailer")
       .map((video: any) => ({
