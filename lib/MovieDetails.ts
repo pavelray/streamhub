@@ -12,8 +12,41 @@ export enum DEPARTMENT_TYPE {
   ACTING = "Acting",
 }
 
+export enum Gender {
+  Unknown = 0,
+  Female = 1,
+  Male = 2,
+}
+
 export type VideoType = VIDEO_TYPE;
 
+export interface CastMember {
+  adult: boolean;
+  gender: Gender;
+  id: number;
+  knownForDepartment: string;
+  name: string;
+  originalName: string;
+  popularity: number;
+  profilePath: string | null;
+  castId: number;
+  character: string;
+  creditId: string;
+  order: number;
+}
+export interface CrewMember {
+  adult: boolean;
+  gender: Gender;
+  id: number;
+  knownForDepartment: string;
+  name: string;
+  originalName: string;
+  popularity: number;
+  profilePath: string | null;
+  creditId: string;
+  department: string;
+  job: string;
+}
 export interface MovieDetails {
   id: number;
   title: string;
@@ -36,26 +69,8 @@ export interface MovieDetails {
     logoPath?: string;
     originCountry: string;
   }[];
-  cast?: {
-    adult: boolean;
-    id: number;
-    name: string;
-    character: string;
-    profilePath?: string;
-  }[];
-  crew: {
-    adult: boolean;
-    gender: number;
-    id: number;
-    knownForDepartment?: string;
-    name: string;
-    originalName?: string;
-    popularity: number;
-    profilePath?: string;
-    creditId: string;
-    department?: string;
-    job?: string;
-  };
+  cast?: CastMember[];
+  crew?: CrewMember[];
   videos?: {
     key: string;
     name: string;

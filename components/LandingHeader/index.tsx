@@ -107,7 +107,7 @@ const LandingHeader = ({
 
           <button className="cursor-pointer group inline-flex items-center gap-3 px-8 py-4 font-bold text-white bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:border-white/50 transition-all duration-300 hover:scale-105 hover:shadow-xl">
             <Info className="w-5 h-5" />
-            <Link href={`/movie/${item.id}`}>
+            <Link href={`/${item.media_type}/${item.id}`}>
               <span>More Info</span>
             </Link>
           </button>
