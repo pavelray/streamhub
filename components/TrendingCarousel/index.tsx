@@ -10,7 +10,6 @@ const TrendingCarousel = ({
 }: {
   trendingItems: TrendingItem[];
 }) => {
-  console.log("Trending Items in Carousel:", trendingItems);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(0);

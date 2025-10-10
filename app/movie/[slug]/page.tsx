@@ -53,7 +53,6 @@ const MovieDetailsPage = async ({
 }) => {
   const { slug } = await params;
   const movie = await getMovieDetailsData(slug);
-  console.log("Movie Details:", movie);
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
