@@ -105,7 +105,8 @@ const MovieDetailsPage = async ({
                   <span className="text-cyan-400 font-bold">
                     {formatDate(movie.releaseDate)}
                   </span>
-                  <span className="text-gray-300">Release</span>
+                  -
+                  <span className="text-gray-300">{movie.status}</span>
                 </div>
 
                 <div className="flex items-center gap-2 px-3 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/20">
