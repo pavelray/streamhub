@@ -8,7 +8,7 @@ import {
   Tag,
 } from "lucide-react";
 import { TrendingMovie, TrendingTV } from "@/lib/Trending";
-import { MOVIE_GENRES, TV_GENRES } from "@/utils/constants";
+import { BASE_IMAGE_URL, MOVIE_GENRES, TV_GENRES } from "@/utils/constants";
 import Link from "next/link";
 
 const LandingHeader = ({
@@ -48,7 +48,7 @@ const LandingHeader = ({
     <section
       className="relative flex items-center justify-center min-h-[600px] md:h-[700px] w-full bg-cover bg-center overflow-hidden"
       style={{
-        backgroundImage: `url('https://image.tmdb.org/t/p/w1280/${item.backdrop_path}')`,
+        backgroundImage: `url('${BASE_IMAGE_URL}/original/${item.backdrop_path}')`,
       }}
     >
       {/* Overlays */}

@@ -46,5 +46,7 @@ export const TV_GENRES: { [key: number]: string } = {
   37: "Western",
 };
 
+export const BASE_IMAGE_URL = "https://image.tmdb.org/t/p";
+
 export const FALLBACK_VIDEO_THUMBNAIL =
   "https://via.placeholder.com/480x360?text=No+Thumbnail";

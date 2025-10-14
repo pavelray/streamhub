@@ -1,5 +1,6 @@
 "use client";
 import { TrendingItem } from "@/lib/Trending";
+import { BASE_IMAGE_URL } from "@/utils/constants";
 import {
   Bookmark,
   Calendar,
@@ -37,13 +38,13 @@ const MediaCard = ({
 
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const getTitle = (item: TrendingItem) => {
-    if (item.media_type === "movie") return item.title;
+    if (item.media_type === "movie" || !item.media_type) return item.title;
     if (item.media_type === "tv") return item.name;
-    return item.name;
+    return item.name || "Untitled";
   };
 
   const getDate = (item: TrendingItem) => {
-    if (item.media_type === "movie") return item.release_date;
+    if (item.media_type === "movie" || !item.media_type) return item.release_date;
     if (item.media_type === "tv") return item.first_air_date;
     return "";
   };
@@ -98,7 +99,7 @@ const MediaCard = ({
         >
           <div className="aspect-[3/4] relative overflow-hidden rounded-t-2xl">
             <img
-              src={`https://image.tmdb.org/t/p/w200/${
+              src={`${BASE_IMAGE_URL}/w400/${
                 getImageUrl(item) || "/api/placeholder/200/267"
               }`}
               alt={getTitle(item)}

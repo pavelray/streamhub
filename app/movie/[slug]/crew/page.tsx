@@ -1,16 +1,7 @@
-import {
-  CastMember,
-  CrewMember,
-} from "@/lib/MovieDetails";
+import { CastMember, CrewMember } from "@/lib/MovieDetails";
 import { TMDB_API_URL } from "@/utils/constants";
-import {
-  castAndCrewDataTransformer,
-} from "@/utils/dataTransformer";
-import {
-  ArrowRight,
-  TrendingUp,
-  User,
-} from "lucide-react";
+import { castAndCrewDataTransformer } from "@/utils/dataTransformer";
+import { ArrowRight, TrendingUp, User } from "lucide-react";
 
 interface CastAndCrewType {
   id: number;
@@ -53,13 +44,17 @@ const CastAndCrewPage = async ({
   const castAndCrew = await getMovieCastAndCrewData(slug);
 
   if (!castAndCrew) {
-    return <div className="text-center text-white mt-20">Cast And Crew details not found</div>;
+    return (
+      <div className="text-center text-white">
+        Cast And Crew details not found
+      </div>
+    );
   }
   return (
-    <div className="min-h-screen">
-      {/* Cast Section */}
-      <section className="py-16 px-6 lg:px-8">
-        <div className="container mx-auto">
+    <div className="min-h-screen mt-24">
+      <div className="container mx-auto">
+        {/* Cast Section */}
+        <section className="py-16 px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <h2 className="section-title text-4xl lg:text-5xl">Cast</h2>
           </div>
@@ -119,16 +114,14 @@ const CastAndCrewPage = async ({
               </div>
             ))}
           </div>
-        </div>
-      </section>
-      <section className="py-16 px-6 lg:px-8">
-        <div className="container mx-auto">
+        </section>
+        <section className="py-16 px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
             <h2 className="section-title text-4xl lg:text-5xl">Crew</h2>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {castAndCrew.crew?.map((member,index) => (
+            {castAndCrew.crew?.map((member, index) => (
               <div
                 key={`crew-${member.id}-${index}`}
                 className="group relative flex-shrink-0 w-40 md:w-48"
@@ -182,8 +175,8 @@ const CastAndCrewPage = async ({
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 };

@@ -63,7 +63,7 @@ export default async function Home() {
   );
 
   return (
-    <>
+    <div className="min-h-screen mt-24">
       <LandingHeader item={headerItem} />
       <LandingSubHeader />
       <RowContainer title="Trending Movies" type="movie">
@@ -81,6 +81,6 @@ export default async function Home() {
           trendingItems={peopleList.results as TrendingPerson[]}
         />
       </RowContainer>
-    </>
+    </div>
   );
 }

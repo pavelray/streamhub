@@ -8,10 +8,8 @@ import { TMDB_API_URL } from "@/utils/constants";
 import { movieDataTransformer } from "@/utils/dataTransformer";
 import { convertMinutesToReadable } from "@/utils/helperMethods";
 import {
-  ArrowRight,
   Calendar,
   Clock,
-  Play,
   Star,
   Tag,
   TrendingUp,
@@ -64,14 +62,14 @@ const MovieDetailsPage = async ({
     return <div className="text-center text-white mt-20">Movie not found</div>;
   }
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mt-24">
       <section
         className="movie-hero min-h-screen flex items-center"
         style={{
           backgroundImage: `linear-gradient(to right,rgba(0, 0, 0, 0.8),rgba(0, 0, 0, 0.4),rgba(0, 0, 0, 0.8)),url(${movie.backdropPath})`,
         }}
       >
-        <div className="container mx-auto px-6 lg:px-8 mt-20">
+        <div className="container mx-auto">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             {/* Movie Poster */}
             <div className="lg:w-1/3 fade-in-up">
@@ -104,8 +102,7 @@ const MovieDetailsPage = async ({
                   <span className="text-cyan-400 font-bold">
                     {formatDate(movie.releaseDate)}
                   </span>
-                  -
-                  <span className="text-gray-300">{movie.status}</span>
+                  -<span className="text-gray-300">{movie.status}</span>
                 </div>
 
                 <div className="flex items-center gap-2 px-3 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/20">
@@ -154,100 +151,62 @@ const MovieDetailsPage = async ({
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                {/* <Link href={`/movie/${movie.id}/watch`}>
-                  <button
-                    className="cursor-pointer group px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-                    style={{
-                      background: "var(--color-header-gradient)",
-                    }}
-                  >
-                    <span className="flex items-center justify-center gap-2 text-[var(--color-white)]">
-                      <Play className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                      Watch Now
-                    </span>
-                  </button>
-                </Link> */}
                 <MediaPlayButton
                   media={{ id: movie.id, name: movie.originalTitle }}
                 />
                 {movie?.videos && <TrailerButton videos={movie.videos} />}
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Cast Section */}
-      <section className="py-16 px-6 lg:px-8">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="section-title text-4xl lg:text-5xl">Cast & Crew</h2>
-            <Link href={`/movie/${slug}/crew`}>
-              <button
-                className="flex items-center gap-2 backdrop-blur-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-purple-500/50"
-                aria-label="View all cast members"
-              >
-                <span className="hidden sm:inline">View All</span>
-                <span className="sm:hidden">All</span>
-                <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-            </Link>
-          </div>
+              {/* Cast & Crew Preview */}
+              <div className="backdrop-blur-lg bg-white/10 rounded-2xl p-6 border border-white/20 shadow-2xl w-full max-w-4xl">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-white text-xl font-bold">Cast & Crew</h2>
+                </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-            {movie.cast?.slice(0, 5).map((member, index) => (
-              <div
-                key={member.id}
-                className="group relative flex-shrink-0 w-40 md:w-48"
-              >
-                {/* Card container */}
-                <div className="relative backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 shadow-xl hover:bg-white/15 hover:border-white/30 transition-all duration-300 hover:scale-105 hover:shadow-purple-500/50 overflow-hidden cursor-pointer">
-                  {/* Decorative gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
-                  {/* Image container */}
-                  <div className="relative w-full h-48 md:h-56 overflow-hidden">
-                    {/* Image or fallback */}
-                    {member.profilePath ? (
-                      <img
-                        src={member.profilePath}
-                        alt={member.name}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-500/40 to-blue-500/40">
-                        <User className="w-16 h-16 md:w-20 md:h-20 text-white/60" />
+                <div className="flex gap-6">
+                  {movie.cast?.slice(0, 5).map((member, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col items-center w-20 cursor-pointer"
+                    >
+                      <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-purple-400 shadow-lg hover:border-purple-300 transition-all hover:scale-110">
+                        {member.profilePath ? (
+                          <img
+                            src={member.profilePath}
+                            alt={member.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full object-cover from-purple-500/40 to-blue-500/40">
+                            <User className="w-full h-full object-cover text-white/60" />
+                          </div>
+                        )}
                       </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                    {/* Popularity badge */}
-                    <div className="absolute top-3 right-3 flex items-center gap-1 bg-gradient-to-r from-purple-500/95 to-blue-500/95 backdrop-blur-sm px-2.5 py-1.5 rounded-full shadow-lg z-20">
-                      <TrendingUp className="w-3.5 h-3.5 text-white flex-shrink-0" />
-                      <span className="text-white font-bold text-xs whitespace-nowrap">
-                        {member.popularity.toFixed(1)}
-                      </span>
+                      <p
+                        className="text-white text-xs font-medium mt-2 text-center truncate w-full"
+                        title={member.name}
+                      >
+                        {member.name}
+                      </p>
+                      <p
+                        className="text-gray-300 text-xs text-center truncate w-full"
+                        title={member.character}
+                      >
+                        {member.character}
+                      </p>
                     </div>
-
-                    {/* Glass reflection effect */}
-                    <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white/10 to-transparent pointer-events-none z-20"></div>
-                  </div>
-                  <div className="relative z-10 p-3 md:p-4">
-                    <h2
-                      className="text-sm md:text-base font-bold text-white mb-1 leading-tight truncate"
-                      title={member.name}
-                    >
-                      {member.name}
-                    </h2>
-                    <p
-                      className="text-purple-200 font-medium text-xs md:text-sm leading-tight line-clamp-2"
-                      title={member.character}
-                    >
-                      as {member.character}
-                    </p>
-                  </div>
+                  ))}
+                  <Link
+                    href={`/movie/${slug}/crew`}
+                    className="flex flex-col items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 transition-all hover:scale-110 shadow-lg border-2 border-purple-300"
+                  >
+                    <span className="text-white text-sm font-bold">View</span>
+                    <span className="text-white text-sm font-bold">All</span>
+                  </Link>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>

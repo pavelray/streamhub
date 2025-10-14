@@ -2,9 +2,9 @@ const WatchPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
 
   return (
-    <div className="min-h-screen pt-12">
-      <section className="py-16 px-6 lg:px-8">
-        <div className="container mx-auto">
+    <div className="min-h-screen mt-24">
+      <div className="container mx-auto">
+        <section className="py-16 px-6 lg:px-8">
           <h2 className="section-title text-4xl lg:text-5xl mb-12">
             Watch Movie ID: {slug}
           </h2>
@@ -14,8 +14,8 @@ const WatchPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
               Video Player for Movie ID: {slug}
             </p>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 };

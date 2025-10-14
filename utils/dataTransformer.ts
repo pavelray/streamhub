@@ -4,6 +4,7 @@ import {
   Gender,
   MovieDetails,
 } from "@/lib/MovieDetails";
+import { BASE_IMAGE_URL } from "./constants";
 
 export const movieDataTransformer = (movieData: any) => {
   const movieDetails: MovieDetails = {
@@ -14,10 +15,10 @@ export const movieDataTransformer = (movieData: any) => {
     tagline: movieData.tagline,
     status: movieData.status,
     posterPath: movieData.poster_path
-      ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}`
+      ? `${BASE_IMAGE_URL}/w500${movieData.poster_path}`
       : "/placeholder_poster.png",
     backdropPath: movieData.backdrop_path
-      ? `https://image.tmdb.org/t/p/original${movieData.backdrop_path}`
+      ? `${BASE_IMAGE_URL}/original${movieData.backdrop_path}`
       : undefined,
     genres: movieData.genres,
     releaseDate: movieData.release_date,
@@ -34,7 +35,7 @@ export const movieDataTransformer = (movieData: any) => {
       popularity: actor.popularity,
       adult: actor.adult,
       profilePath: actor.profile_path
-        ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+        ? `${BASE_IMAGE_URL}/w200${actor.profile_path}`
         : undefined,
     })),
     crew: movieData.credits?.crew.map((member: any) => ({
@@ -43,7 +44,7 @@ export const movieDataTransformer = (movieData: any) => {
       job: member.job,
       department: member.department,
       profilePath: member.profile_path
-        ? `https://image.tmdb.org/t/p/w200${member.profile_path}`
+        ? `${BASE_IMAGE_URL}/w200${member.profile_path}`
         : undefined,
     })),
     videos: movieData.videos?.results
@@ -73,7 +74,7 @@ export const castAndCrewDataTransformer = (creditsData: any) => {
         originalName: actor.original_name,
         popularity: actor.popularity,
         profilePath: actor.profile_path
-          ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+          ? `${BASE_IMAGE_URL}/w200${actor.profile_path}`
           : null,
         castId: actor.cast_id,
         character: actor.character,
@@ -91,7 +92,7 @@ export const castAndCrewDataTransformer = (creditsData: any) => {
         originalName: member.original_name,
         popularity: member.popularity,
         profilePath: member.profile_path
-          ? `https://image.tmdb.org/t/p/w200${member.profile_path}`
+          ? `${BASE_IMAGE_URL}/w200${member.profile_path}`
           : null,
         creditId: member.credit_id,
         department: member.department,
