@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import slugify from "slugify";
 
 const MediaCard = ({
   item,
@@ -44,7 +45,8 @@ const MediaCard = ({
   };
 
   const getDate = (item: TrendingItem) => {
-    if (item.media_type === "movie" || !item.media_type) return item.release_date;
+    if (item.media_type === "movie" || !item.media_type)
+      return item.release_date;
     if (item.media_type === "tv") return item.first_air_date;
     return "";
   };
@@ -61,14 +63,14 @@ const MediaCard = ({
     });
   };
 
-  const handleCardClick = (id: number) => {
+  const handleCardClick = (id: number, title: string) => {
     let basePath = "/movie"; // Default to movies
     if (item.media_type === "tv") {
       basePath = "/tv";
     } else if (item.media_type === "person") {
       basePath = `/person`;
     }
-    router.push(`${basePath}/${id}`);
+    router.push(`${basePath}/${slugify(title,{remove: /[*+~.()'"!:@]/g})}-${id}`);
   };
 
   const renderMediaTypeIcon = (mediaType: "movie" | "tv" | "person") => {
@@ -94,7 +96,9 @@ const MediaCard = ({
     >
       <div className="mx-1.5">
         <div
-          onClick={() => handleCardClick(item.id)}
+          onClick={() =>
+            handleCardClick(item.id, getTitle(item))
+          }
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 hover:border-white/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
         >
           <div className="aspect-[3/4] relative overflow-hidden rounded-t-2xl">
@@ -136,7 +140,7 @@ const MediaCard = ({
                     onClick={(e) => {
                       e.stopPropagation();
                       console.log("Play clicked:", item.id);
-                      handleCardClick(item.id);
+                      handleCardClick(item.id, item.title || item.name || "");
                     }}
                   />
                 </div>

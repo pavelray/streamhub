@@ -41,7 +41,9 @@ const CastAndCrewPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const castAndCrew = await getMovieCastAndCrewData(slug);
+  const slugParts = slug.split("-");
+  const movieId = slugParts[slugParts.length - 1];
+  const castAndCrew = await getMovieCastAndCrewData(movieId);
 
   if (!castAndCrew) {
     return (

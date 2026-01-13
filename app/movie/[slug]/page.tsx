@@ -50,7 +50,9 @@ const MovieDetailsPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const movie = await getMovieDetailsData(slug);
+  const slugParts = slug.split("-");
+  const movieId = slugParts[slugParts.length - 1];
+  const movie = await getMovieDetailsData(movieId);
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
