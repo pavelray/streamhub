@@ -1,0 +1,9 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Crawl-Delay: 10
+Sitemap: https://streamhub.pavelray.in/sitemap.xml

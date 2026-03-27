@@ -6,7 +6,8 @@ import StreamingProviders from "@/components/StreamingProviders";
 import WatchlistButton from "@/components/WatchlistButton";
 import { TVDetails } from "@/lib/TVDetails";
 import { TrendingItem } from "@/lib/Trending";
-import { TMDB_API_URL } from "@/utils/constants";
+import { APP_NAME, SITE_URL, TMDB_API_URL } from "@/utils/constants";
+import type { Metadata } from "next";
 import { tvDataTransformer } from "@/utils/dataTransformer";
 import {
   Calendar,
@@ -36,6 +37,54 @@ const getTVDetailsData = async (tvId: string): Promise<TVDetails | null> => {
     return null;
   }
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const slugParts = slug.split("-");
+  const tvId = slugParts[slugParts.length - 1];
+  const series = await getTVDetailsData(tvId);
+
+  if (!series) {
+    return { title: `TV Series | ${APP_NAME}` };
+  }
+
+  const releaseYear = series.firstAirDate
+    ? new Date(series.firstAirDate).getFullYear()
+    : "";
+  const genreText = series.genres?.map((g: { name: string }) => g.name).join(", ") || "";
+  const creatorName = series.crew?.find((c: { job: string; name: string }) => c.job === "Creator" || c.job === "Executive Producer")?.name || "";
+  const ogImage = series.posterPath
+    ? `https://image.tmdb.org/t/p/w780${series.posterPath}`
+    : `${SITE_URL}/images/og-image.png`;
+
+  const title = `${series.name}${releaseYear ? ` (${releaseYear})` : ""}`;
+  const description = `${series.name} is a ${genreText} TV series${creatorName ? ` created by ${creatorName}` : ""}. ${series.overview?.slice(0, 160) || ""}`;
+
+  return {
+    title,
+    description,
+    keywords: `${series.name}, ${releaseYear}, ${genreText}, ${creatorName}, tv series, trailers, streamhub`,
+    openGraph: {
+      title,
+      description,
+      type: "video.tv_show",
+      url: `${SITE_URL}/tv/${slug}`,
+      locale: "en_US",
+      siteName: APP_NAME,
+      images: [{ url: ogImage, width: 780, height: 1170, alt: series.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+  };
+}
 
 const TVDetailsPage = async ({
   params,

@@ -1,8 +1,28 @@
-import { TMDB_API_URL, BASE_IMAGE_URL, MOVIE_GENRES, TV_GENRES } from "@/utils/constants";
+import { TMDB_API_URL, BASE_IMAGE_URL, MOVIE_GENRES, TV_GENRES, APP_NAME, SEO_TAGS } from "@/utils/constants";
 import { Film, Search, Star, Tv, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import slugify from "slugify";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}): Promise<Metadata> {
+  const { q } = await searchParams;
+  if (!q) {
+    return {
+      title: SEO_TAGS.SEARCH.TITLE,
+      description: SEO_TAGS.SEARCH.DESCRIPTION,
+    };
+  }
+  return {
+    title: `Search: ${q}`,
+    description: `Search results for "${q}" – movies, TV series, and people on ${APP_NAME}.`,
+    robots: { index: false, follow: false },
+  };
+}
 
 interface SearchResult {
   id: number;

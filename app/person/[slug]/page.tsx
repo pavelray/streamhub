@@ -1,9 +1,10 @@
-import { BASE_IMAGE_URL, MOVIE_GENRES, TV_GENRES } from "@/utils/constants";
+import { BASE_IMAGE_URL, MOVIE_GENRES, TV_GENRES, APP_NAME, SITE_URL } from "@/utils/constants";
 import { TMDB_API_URL } from "@/utils/constants";
 import { Calendar, ExternalLink, Film, Star, Tv, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import slugify from "slugify";
+import type { Metadata } from "next";
 
 interface PersonDetails {
   id: number;
@@ -52,6 +53,50 @@ const getPersonDetails = async (personId: string): Promise<PersonDetails | null>
     return null;
   }
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const slugParts = slug.split("-");
+  const personId = slugParts[slugParts.length - 1];
+  const person = await getPersonDetails(personId);
+
+  if (!person) {
+    return { title: `Person | ${APP_NAME}` };
+  }
+
+  const ogImage = person.profile_path
+    ? `https://image.tmdb.org/t/p/w500${person.profile_path}`
+    : `${SITE_URL}/images/og-image.png`;
+
+  const description = person.biography
+    ? person.biography.slice(0, 200)
+    : `Explore the filmography and profile of ${person.name} on ${APP_NAME}.`;
+
+  return {
+    title: person.name,
+    description,
+    keywords: `${person.name}, actor, actress, director, movies, tv series, streamhub`,
+    openGraph: {
+      title: person.name,
+      description,
+      type: "profile",
+      url: `${SITE_URL}/person/${slug}`,
+      locale: "en_US",
+      siteName: APP_NAME,
+      images: [{ url: ogImage, width: 500, height: 750, alt: person.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: person.name,
+      description,
+      images: [ogImage],
+    },
+  };
+}
 
 export default async function PersonPage({
   params,

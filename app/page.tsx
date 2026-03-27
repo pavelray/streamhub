@@ -61,9 +61,6 @@ function getRandomHeaderItem(
 
 export default async function Home() {
   const { movieList, tvList, peopleList } = await getAllData();
-  console.log("Movie List:", movieList);
-  console.log("TV List:", tvList);
-  console.log("People List:", peopleList);
   const headerItem = getRandomHeaderItem(
     movieList.results as TrendingMovie[],
     tvList.results as TrendingTV[]

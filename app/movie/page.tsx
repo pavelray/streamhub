@@ -1,7 +1,14 @@
 import TrendingCarousel from "@/components/TrendingCarousel";
 import RowContainer from "@/components/RowContainer";
 import { TrendingItem } from "@/lib/Trending";
-import { TMDB_API_URL } from "@/utils/constants";
+import { TMDB_API_URL, SEO_TAGS } from "@/utils/constants";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: SEO_TAGS.MOVIE.TITLE,
+  description: SEO_TAGS.MOVIE.DESCRIPTION,
+  keywords: SEO_TAGS.MOVIE.KEYWORDS,
+};
 
 const getMovieLists = async () => {
   const [popular, topRated, nowPlaying, upcoming] = await Promise.all([

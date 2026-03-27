@@ -139,7 +139,6 @@ const MediaCard = ({
                     className="w-6 h-6 text-white fill-current ml-0.5"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log("Play clicked:", item.id);
                       handleCardClick(item.id, getTitle(item));
                     }}
                   />

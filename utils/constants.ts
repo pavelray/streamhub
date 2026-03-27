@@ -50,3 +50,49 @@ export const BASE_IMAGE_URL = "https://image.tmdb.org/t/p";
 
 export const FALLBACK_VIDEO_THUMBNAIL =
   "https://via.placeholder.com/480x360?text=No+Thumbnail";
+
+export const APP_NAME = "StreamHub";
+export const SITE_URL = "https://streamhub.pavelray.in";
+export const SITE_OG_IMAGE = `${SITE_URL}/images/og-image.png`;
+
+export const SEO_TAGS = {
+  DEFAULT: {
+    TITLE: "StreamHub – Watch Trending Movies & TV Series",
+    DESCRIPTION:
+      "Discover and explore trending movies, TV series, and people. Find trailers, cast details, streaming providers, and more on StreamHub.",
+    KEYWORDS:
+      "watch movies online, trending movies, tv series, streaming, trailers, cast, streamhub",
+  },
+  MOVIE: {
+    TITLE: `Movies | ${APP_NAME}`,
+    DESCRIPTION:
+      "Browse trending, popular, and upcoming movies. Find trailers, cast details, and streaming providers.",
+    KEYWORDS:
+      "movies, trending movies, popular movies, upcoming movies, movie trailers, streamhub",
+  },
+  TV: {
+    TITLE: `TV Series | ${APP_NAME}`,
+    DESCRIPTION:
+      "Browse trending, popular, and on-air TV series. Find trailers, cast details, and streaming providers.",
+    KEYWORDS:
+      "tv series, trending tv shows, popular tv shows, on air tv, upcoming tv series, streamhub",
+  },
+  SEARCH: {
+    TITLE: `Search | ${APP_NAME}`,
+    DESCRIPTION:
+      "Search for your favorite movies, TV series, and people on StreamHub.",
+    KEYWORDS: "search movies, search tv series, search cast, streamhub",
+  },
+  DISCOVER: {
+    TITLE: `Discover | ${APP_NAME}`,
+    DESCRIPTION:
+      "Discover movies and TV series by genre, mood, and more on StreamHub.",
+    KEYWORDS:
+      "discover movies, discover tv series, genre, mood search, streamhub",
+  },
+  WATCHLIST: {
+    TITLE: `My Watchlist | ${APP_NAME}`,
+    DESCRIPTION: "Your personal watchlist on StreamHub.",
+    KEYWORDS: "watchlist, my movies, my tv shows, streamhub",
+  },
+};

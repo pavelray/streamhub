@@ -6,7 +6,7 @@ import StreamingProviders from "@/components/StreamingProviders";
 import WatchlistButton from "@/components/WatchlistButton";
 import { MovieDetails } from "@/lib/MovieDetails";
 import { TrendingItem } from "@/lib/Trending";
-import { TMDB_API_URL } from "@/utils/constants";
+import { APP_NAME, SITE_URL, TMDB_API_URL } from "@/utils/constants";
 import { movieDataTransformer } from "@/utils/dataTransformer";
 import { convertMinutesToReadable } from "@/utils/helperMethods";
 import {
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 
 const append_to_response =
   "videos,images,credits,recommendations,similar,watch/providers";
@@ -45,6 +46,55 @@ const getMovieDetailsData = async (
     return null;
   }
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const slugParts = slug.split("-");
+  const movieId = slugParts[slugParts.length - 1];
+  const movie = await getMovieDetailsData(movieId);
+
+  if (!movie) {
+    return { title: `Movie | ${APP_NAME}` };
+  }
+
+  const releaseYear = movie.releaseDate
+    ? new Date(movie.releaseDate).getFullYear()
+    : "";
+  const genreText = movie.genres?.map((g: { name: string }) => g.name).join(", ") || "";
+  const directorName =
+    movie.crew?.find((c: { job: string; name: string }) => c.job === "Director")?.name || "";
+  const ogImage = movie.posterPath
+    ? `https://image.tmdb.org/t/p/w780${movie.posterPath}`
+    : `${SITE_URL}/images/og-image.png`;
+
+  const title = `${movie.title}${releaseYear ? ` (${releaseYear})` : ""}`;
+  const description = `${movie.title} is a ${genreText} film${directorName ? ` directed by ${directorName}` : ""}. ${movie.overview?.slice(0, 160) || ""}`;
+
+  return {
+    title,
+    description,
+    keywords: `${movie.title}, ${releaseYear}, ${genreText}, ${directorName}, movie, trailers, reviews, streamhub`,
+    openGraph: {
+      title,
+      description,
+      type: "video.movie",
+      url: `${SITE_URL}/movie/${slug}`,
+      locale: "en_US",
+      siteName: APP_NAME,
+      images: [{ url: ogImage, width: 780, height: 1170, alt: movie.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
+  };
+}
 
 const MovieDetailsPage = async ({
   params,
