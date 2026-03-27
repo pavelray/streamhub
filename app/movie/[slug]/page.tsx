@@ -2,6 +2,8 @@ import MediaPlayButton from "@/components/MediaPlayButton";
 import TrailerButton from "@/components/TrailerButton";
 import TrendingCarousel from "@/components/TrendingCarousel";
 import VideoCard from "@/components/VideoCard";
+import StreamingProviders from "@/components/StreamingProviders";
+import WatchlistButton from "@/components/WatchlistButton";
 import { MovieDetails } from "@/lib/MovieDetails";
 import { TrendingItem } from "@/lib/Trending";
 import { TMDB_API_URL } from "@/utils/constants";
@@ -19,7 +21,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const append_to_response =
-  "videos,images,credits,recommendations,similar,watch_providers";
+  "videos,images,credits,recommendations,similar,watch/providers";
 
 const getMovieDetailsData = async (
   movieId: string
@@ -152,12 +154,20 @@ const MovieDetailsPage = async ({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <div className="flex flex-col sm:flex-row gap-4 mb-8 flex-wrap">
                 <MediaPlayButton
                   media={{ id: movie.id, name: movie.originalTitle }}
                 />
                 {movie?.videos && <TrailerButton videos={movie.videos} />}
+                <WatchlistButton item={{ id: movie.id, title: movie.title, posterPath: movie.posterPath, mediaType: "movie" }} />
               </div>
+
+              {/* Streaming Providers */}
+              {movie.watchProviders && (
+                <div className="mb-8">
+                  <StreamingProviders providers={movie.watchProviders} />
+                </div>
+              )}
 
               {/* Cast & Crew Preview */}
               <div className="backdrop-blur-lg bg-white/10 rounded-2xl p-6 border border-white/20 shadow-2xl w-full max-w-4xl">

@@ -1,24 +1,36 @@
 "use client";
 import { useState } from "react";
-import { Film, Tv, TrendingUp, User, Search } from 'lucide-react'; // adjust as necessary
-import ThemeSwitchButton from "../ThemeSwitchButton"; // as per previous instructions
-import { link } from "fs";
+import { Film, Tv, TrendingUp, Bookmark, Search, Layers } from "lucide-react";
+import ThemeSwitchButton from "../ThemeSwitchButton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useWatchlistStore } from "@/utils/watchlistStore";
 
 export default function Header({ isScrolled }: { isScrolled: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const watchlistCount = useWatchlistStore((s) => s.items.length);
 
   const navItems = [
-    { name: "Movies", icon: Film, link: "/movies" },
-    { name: "TV Series", icon: Tv, link: "/tv-series" },
+    { name: "Movies", icon: Film, link: "/movie" },
+    { name: "TV Shows", icon: Tv, link: "/tv" },
     { name: "Discover", icon: TrendingUp, link: "/discover" },
-    { name: "About", icon: User, link: "/about" },
+    { name: "Collections", icon: Layers, link: "/collections" },
   ];
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setMenuOpen(false);
+    }
+  };
+
   return (
-    <header 
+    <header
       className={`fixed top-0 left-0 right-0 z-50 px-4 py-3 ${
-        isScrolled ? 'header-scrolled' : 'header-default'
+        isScrolled ? "header-scrolled" : "header-default"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,40 +47,53 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              {navItems.map(({ name, icon: Icon }) => (
-                <a
+              {navItems.map(({ name, icon: Icon, link }) => (
+                <Link
                   key={name}
-                  href={`#${name.toLowerCase().replace(" ", "-")}`}
+                  href={link}
                   className="group flex items-center gap-2 text-[var(--color-white)] hover:text-cyan-400 px-3 py-2 text-sm font-medium transition-all duration-300 relative"
                 >
                   <Icon className="w-4 h-4" />
                   {name}
-                  <span
-                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-clip-text text-transparent group-hover:w-full transition-all duration-300 bg-gradient-to-r from-cyan-400 to-purple-400"
-                    style={{
-                      backgroundImage: "var(--color-header-gradient)",
-                    }}
-                  ></span>
-                </a>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 bg-gradient-to-r from-cyan-400 to-purple-400"></span>
+                </Link>
               ))}
             </div>
           </div>
 
-          {/* Search bar + Theme Switch */}
+          {/* Search + Watchlist + Theme */}
           <div className="flex items-center gap-2">
-            <div className="relative hidden sm:block">
+            <form onSubmit={handleSearch} className="relative hidden sm:block">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
               </div>
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search movies, TV shows..."
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-2 pl-10 pr-4 text-sm text-[var(--color-white)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 focus:bg-white/15 transition-all duration-300 w-64"
+                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-2 pl-10 pr-4 text-sm text-[var(--color-white)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 focus:bg-white/15 transition-all duration-300 w-52 lg:w-64"
               />
-            </div>
-            {/* Theme switch button */}
+            </form>
+
+            <Link
+              href="/watchlist"
+              className="relative flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
+              aria-label="Watchlist"
+            >
+              <Bookmark className="w-4 h-4 text-white" />
+              {watchlistCount > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-white text-xs flex items-center justify-center font-bold"
+                  style={{ background: "var(--color-header-gradient)" }}
+                >
+                  {watchlistCount > 9 ? "9+" : watchlistCount}
+                </span>
+              )}
+            </Link>
+
             <ThemeSwitchButton />
-            {/* Hamburger for mobile */}
+
             <button
               className="md:hidden ml-2 p-2 rounded focus:outline-none"
               onClick={() => setMenuOpen((x) => !x)}
@@ -96,28 +121,37 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
         {menuOpen && (
           <div className="md:hidden mt-2 pb-4">
             <div className="flex flex-col gap-1">
-              {navItems.map(({ name, icon: Icon }) => (
-                <a
+              {navItems.map(({ name, icon: Icon, link }) => (
+                <Link
                   key={name}
-                  href={`#${name.toLowerCase().replace(" ", "-")}`}
+                  href={link}
                   className="flex items-center gap-2 text-[var(--color-white)] hover:text-cyan-400 px-3 py-2 text-base font-medium transition-all duration-300"
                   onClick={() => setMenuOpen(false)}
                 >
                   <Icon className="w-5 h-5" />
                   {name}
-                </a>
+                </Link>
               ))}
-              {/* Search bar in mobile menu */}
-              <div className="relative mt-2">
+              <Link
+                href="/watchlist"
+                className="flex items-center gap-2 text-[var(--color-white)] hover:text-cyan-400 px-3 py-2 text-base font-medium"
+                onClick={() => setMenuOpen(false)}
+              >
+                <Bookmark className="w-5 h-5" />
+                Watchlist {watchlistCount > 0 && `(${watchlistCount})`}
+              </Link>
+              <form onSubmit={handleSearch} className="relative mt-2">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search movies, TV shows..."
-                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-2 pl-10 pr-4 text-sm text-[var(--color-white)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 focus:bg-white/15 transition-all duration-300 w-full"
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-2 pl-10 pr-4 text-sm text-[var(--color-white)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 w-full"
                 />
-              </div>
+              </form>
             </div>
           </div>
         )}

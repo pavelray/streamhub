@@ -79,6 +79,7 @@ export interface MovieDetails {
     site: string;
     type: VideoType;
   }[];
-  recommendations: TrendingItem[],
-  similar: TrendingItem[],
+  recommendations: TrendingItem[];
+  similar: TrendingItem[];
+  watchProviders?: import("./TVDetails").WatchProviderRegion;
 }

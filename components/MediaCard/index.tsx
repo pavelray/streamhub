@@ -140,7 +140,7 @@ const MediaCard = ({
                     onClick={(e) => {
                       e.stopPropagation();
                       console.log("Play clicked:", item.id);
-                      handleCardClick(item.id, item.title || item.name || "");
+                      handleCardClick(item.id, getTitle(item));
                     }}
                   />
                 </div>
