@@ -8,6 +8,7 @@ import { MovieDetails } from "@/lib/MovieDetails";
 import { TrendingItem } from "@/lib/Trending";
 import { APP_NAME, SITE_URL, TMDB_API_URL } from "@/utils/constants";
 import { movieDataTransformer } from "@/utils/dataTransformer";
+import { notFound } from "next/navigation";
 import { convertMinutesToReadable } from "@/utils/helperMethods";
 import {
   Calendar,
@@ -22,29 +23,36 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 const append_to_response =
-  "videos,images,credits,recommendations,similar,watch/providers";
+  "videos,credits,recommendations,similar,watch/providers";
 
 const getMovieDetailsData = async (
   movieId: string
 ): Promise<MovieDetails | null> => {
-  try {
-    const url = `${TMDB_API_URL}/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=${append_to_response}`;
-    const movieRes = await fetch(
-      url,
-      { next: { revalidate: 86400 } } // Revalidate every 24 hours
-    );
-    if (!movieRes.ok) {
-      console.error("Failed to fetch movie details");
+  const url = `${TMDB_API_URL}/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=${append_to_response}`;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const movieRes = await fetch(url, { next: { revalidate: 86400 } });
+      if (movieRes.status === 404) return null;
+      if (!movieRes.ok) {
+        if (attempt < 2) {
+          await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+          continue;
+        }
+        console.error(`Failed to fetch movie details: status ${movieRes.status}`);
+        return null;
+      }
+      const movieData = await movieRes.json();
+      return movieDataTransformer(movieData);
+    } catch (error) {
+      if (attempt < 2) {
+        await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+        continue;
+      }
+      console.error("Error fetching movie details:", error);
       return null;
     }
-
-    const movieData = await movieRes.json();
-    const movieDetails = movieDataTransformer(movieData);
-    return movieDetails;
-  } catch (error) {
-    console.error("Error fetching movie details:", error);
-    return null;
   }
+  return null;
 };
 
 export async function generateMetadata({
@@ -67,9 +75,7 @@ export async function generateMetadata({
   const genreText = movie.genres?.map((g: { name: string }) => g.name).join(", ") || "";
   const directorName =
     movie.crew?.find((c: { job: string; name: string }) => c.job === "Director")?.name || "";
-  const ogImage = movie.posterPath
-    ? `https://image.tmdb.org/t/p/w780${movie.posterPath}`
-    : `${SITE_URL}/images/og-image.png`;
+  const ogImage = movie.posterPath ?? `${SITE_URL}/images/og-image.png`;
 
   const title = `${movie.title}${releaseYear ? ` (${releaseYear})` : ""}`;
   const description = `${movie.title} is a ${genreText} film${directorName ? ` directed by ${directorName}` : ""}. ${movie.overview?.slice(0, 160) || ""}`;
@@ -113,7 +119,7 @@ const MovieDetailsPage = async ({
   };
 
   if (!movie) {
-    return <div className="text-center text-white mt-20">Movie not found</div>;
+    notFound();
   }
   return (
     <div className="min-h-screen">

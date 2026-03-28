@@ -1,5 +1,6 @@
 import { BASE_IMAGE_URL, MOVIE_GENRES, TV_GENRES, APP_NAME, SITE_URL } from "@/utils/constants";
 import { TMDB_API_URL } from "@/utils/constants";
+import { notFound } from "next/navigation";
 import { Calendar, ExternalLink, Film, Star, Tv, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -109,7 +110,7 @@ export default async function PersonPage({
   const person = await getPersonDetails(personId);
 
   if (!person) {
-    return <div className="text-center text-white mt-32">Person not found</div>;
+    notFound();
   }
 
   const formatDate = (d: string | null) => {

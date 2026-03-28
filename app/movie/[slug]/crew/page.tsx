@@ -2,6 +2,7 @@ import { CastMember, CrewMember } from "@/lib/MovieDetails";
 import { TMDB_API_URL } from "@/utils/constants";
 import { castAndCrewDataTransformer } from "@/utils/dataTransformer";
 import { ArrowRight, TrendingUp, User } from "lucide-react";
+import { notFound } from "next/navigation";
 
 interface CastAndCrewType {
   id: number;
@@ -46,11 +47,7 @@ const CastAndCrewPage = async ({
   const castAndCrew = await getMovieCastAndCrewData(movieId);
 
   if (!castAndCrew) {
-    return (
-      <div className="text-center text-white">
-        Cast And Crew details not found
-      </div>
-    );
+    notFound();
   }
   return (
     <div className="min-h-screen mt-24">

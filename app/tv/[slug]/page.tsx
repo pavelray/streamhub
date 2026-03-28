@@ -9,6 +9,7 @@ import { TrendingItem } from "@/lib/Trending";
 import { APP_NAME, SITE_URL, TMDB_API_URL } from "@/utils/constants";
 import type { Metadata } from "next";
 import { tvDataTransformer } from "@/utils/dataTransformer";
+import { notFound } from "next/navigation";
 import {
   Calendar,
   Clock,
@@ -26,16 +27,31 @@ const append_to_response =
   "videos,aggregate_credits,recommendations,similar,watch/providers";
 
 const getTVDetailsData = async (tvId: string): Promise<TVDetails | null> => {
-  try {
-    const url = `${TMDB_API_URL}/tv/${tvId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=${append_to_response}`;
-    const res = await fetch(url, { next: { revalidate: 86400 } });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return tvDataTransformer(data);
-  } catch (error) {
-    console.error("Error fetching TV details:", error);
-    return null;
+  const url = `${TMDB_API_URL}/tv/${tvId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=${append_to_response}`;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const res = await fetch(url, { next: { revalidate: 86400 } });
+      if (res.status === 404) return null;
+      if (!res.ok) {
+        if (attempt < 2) {
+          await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+          continue;
+        }
+        console.error(`Failed to fetch TV details: status ${res.status}`);
+        return null;
+      }
+      const data = await res.json();
+      return tvDataTransformer(data);
+    } catch (error) {
+      if (attempt < 2) {
+        await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+        continue;
+      }
+      console.error("Error fetching TV details:", error);
+      return null;
+    }
   }
+  return null;
 };
 
 export async function generateMetadata({
@@ -57,9 +73,7 @@ export async function generateMetadata({
     : "";
   const genreText = series.genres?.map((g: { name: string }) => g.name).join(", ") || "";
   const creatorName = series.crew?.find((c: { job: string; name: string }) => c.job === "Creator" || c.job === "Executive Producer")?.name || "";
-  const ogImage = series.posterPath
-    ? `https://image.tmdb.org/t/p/w780${series.posterPath}`
-    : `${SITE_URL}/images/og-image.png`;
+  const ogImage = series.posterPath ?? `${SITE_URL}/images/og-image.png`;
 
   const title = `${series.name}${releaseYear ? ` (${releaseYear})` : ""}`;
   const description = `${series.name} is a ${genreText} TV series${creatorName ? ` created by ${creatorName}` : ""}. ${series.overview?.slice(0, 160) || ""}`;
@@ -105,7 +119,7 @@ const TVDetailsPage = async ({
   };
 
   if (!series) {
-    return <div className="text-center text-white mt-32">TV series not found</div>;
+    notFound();
   }
 
   const runtime = series.episodeRunTime?.[0];
