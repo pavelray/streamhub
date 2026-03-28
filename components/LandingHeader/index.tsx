@@ -46,7 +46,7 @@ const LandingHeader = ({
 
   return (
     <section
-      className="relative flex items-center justify-center min-h-[600px] md:h-[700px] w-full bg-cover bg-center overflow-hidden"
+      className="relative flex items-start sm:items-center justify-center min-h-[580px] sm:min-h-[600px] md:h-[700px] w-full bg-cover bg-center overflow-hidden"
       style={{
         backgroundImage: `url('${BASE_IMAGE_URL}/original/${item.backdrop_path}')`,
       }}
@@ -63,7 +63,7 @@ const LandingHeader = ({
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-4xl text-left px-6 py-8 text-white">
+      <div className="relative z-10 max-w-4xl text-left px-4 sm:px-6 pt-8 pb-6 sm:py-8 text-white">
         {/* Media Type Badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
           <Film className="w-4 h-4" />
@@ -74,7 +74,7 @@ const LandingHeader = ({
 
         {/* Movie/TV Title with Gradient */}
         <h1
-          className="text-4xl md:text-6xl font-black mb-6 leading-tight"
+          className="text-3xl sm:text-4xl md:text-6xl font-black mb-4 sm:mb-6 leading-tight"
           style={{
             background: "var(--color-header-gradient)",
             WebkitBackgroundClip: "text",
@@ -87,7 +87,7 @@ const LandingHeader = ({
         </h1>
 
         {/* Overview */}
-        <p className="mb-8 text-lg md:text-xl font-light leading-relaxed line-clamp-3 max-w-3xl text-gray-100">
+        <p className="mb-6 sm:mb-8 text-base sm:text-lg md:text-xl font-light leading-relaxed line-clamp-3 max-w-3xl text-gray-100">
           {item.overview || "No description available."}
         </p>
 
@@ -114,7 +114,7 @@ const LandingHeader = ({
         </div>
 
         {/* Enhanced Stats with Icons */}
-        <div className="flex flex-wrap gap-6 text-sm font-medium">
+        <div className="flex flex-wrap gap-3 sm:gap-6 text-sm font-medium">
           <div className="flex items-center gap-2 px-3 py-2 bg-black/30 backdrop-blur-sm rounded-lg border border-white/20">
             <Calendar className="w-4 h-4 text-cyan-400" />
             <span className="text-cyan-400 font-bold">{getReleaseYear()}</span>

@@ -11,7 +11,7 @@ export default function WatchlistPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen mt-24 flex flex-col items-center justify-center text-center px-6">
+      <div className="min-h-screen mt-20 sm:mt-24 flex flex-col items-center justify-center text-center px-4 sm:px-6">
         <Bookmark className="w-20 h-20 text-white/20 mb-6" />
         <h1 className="text-3xl font-bold text-white mb-3">Your Watchlist is Empty</h1>
         <p className="text-gray-400 mb-8 max-w-md">
@@ -40,12 +40,12 @@ export default function WatchlistPage() {
   const tvShows = items.filter((i) => i.mediaType === "tv");
 
   return (
-    <div className="min-h-screen mt-24 px-6 lg:px-8">
+    <div className="min-h-screen mt-20 sm:mt-24 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-10">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 sm:mb-10">
           <div>
-            <h1 className="section-title text-4xl lg:text-5xl mb-2">My Watchlist</h1>
+            <h1 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-2">My Watchlist</h1>
             <p className="text-gray-400">{items.length} {items.length === 1 ? "title" : "titles"} saved</p>
           </div>
           <button

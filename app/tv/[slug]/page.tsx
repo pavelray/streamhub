@@ -111,20 +111,20 @@ const TVDetailsPage = async ({
   const runtime = series.episodeRunTime?.[0];
 
   return (
-    <div className="min-h-screen mt-24">
+    <div className="min-h-screen">
       {/* Hero */}
       <section
-        className="movie-hero min-h-screen flex items-center"
+        className="movie-hero min-h-screen flex items-start lg:items-center"
         style={{
           backgroundImage: series.backdropPath
             ? `linear-gradient(to right,rgba(0,0,0,0.85),rgba(0,0,0,0.45),rgba(0,0,0,0.85)),url(${series.backdropPath})`
             : "none",
         }}
       >
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-10 lg:py-16">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8 lg:gap-12">
             {/* Poster */}
-            <div className="lg:w-1/3 fade-in-up">
+            <div className="md:w-1/3 fade-in-up">
               <div className="glass-effect rounded-2xl p-4">
                 <Image
                   src={series.posterPath}
@@ -138,8 +138,8 @@ const TVDetailsPage = async ({
             </div>
 
             {/* Details */}
-            <div className="lg:w-2/3 fade-in-up">
-              <h1 className="text-5xl lg:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+            <div className="md:w-2/3 fade-in-up">
+              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
                 {series.name}
               </h1>
               {series.tagline && (
@@ -147,7 +147,7 @@ const TVDetailsPage = async ({
                   {series.tagline}
                 </h4>
               )}
-              <p className="text-lg lg:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl">
                 {series.overview}
               </p>
 
@@ -233,10 +233,10 @@ const TVDetailsPage = async ({
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-white text-xl font-bold">Top Cast</h2>
                   </div>
-                  <div className="flex gap-6 flex-wrap">
+                  <div className="flex flex-wrap gap-4 sm:gap-6">
                     {series.cast.slice(0, 6).map((member) => (
-                      <div key={member.id} className="flex flex-col items-center w-20">
-                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-purple-400 shadow-lg hover:border-purple-300 transition-all hover:scale-110">
+                      <div key={member.id} className="flex flex-col items-center w-16 sm:w-20">
+                          <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-purple-400 shadow-lg hover:border-purple-300 transition-all hover:scale-110">
                           {member.profilePath ? (
                             <img
                               src={member.profilePath}
@@ -270,7 +270,7 @@ const TVDetailsPage = async ({
       {series.seasons.length > 0 && (
         <section className="py-16 px-6 lg:px-8">
           <div className="container mx-auto">
-            <h2 className="section-title text-4xl lg:text-5xl mb-10">Seasons</h2>
+            <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-10">Seasons</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {series.seasons.map((season) => (
                 <Link
@@ -311,7 +311,7 @@ const TVDetailsPage = async ({
       {series.videos && series.videos.length > 0 && (
         <section className="py-16 px-6 lg:px-8">
           <div className="container mx-auto">
-            <h2 className="section-title text-4xl lg:text-5xl mb-12">Videos & Trailers</h2>
+            <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-12">Videos & Trailers</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {series.videos.map((video) => (
                 <VideoCard key={video.key} video={video} />
@@ -325,7 +325,7 @@ const TVDetailsPage = async ({
       {series.recommendations && series.recommendations.length > 0 && (
         <section className="py-16 px-6 lg:px-8">
           <div className="container mx-auto">
-            <h2 className="section-title text-4xl lg:text-5xl mb-6">Recommended For You</h2>
+            <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-6">Recommended For You</h2>
             <TrendingCarousel trendingItems={series.recommendations as TrendingItem[]} />
           </div>
         </section>
@@ -335,7 +335,7 @@ const TVDetailsPage = async ({
       {series.similar && series.similar.length > 0 && (
         <section className="py-16 px-6 lg:px-8">
           <div className="container mx-auto">
-            <h2 className="section-title text-4xl lg:text-5xl mb-6">More Like This</h2>
+            <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-6">More Like This</h2>
             <TrendingCarousel trendingItems={series.similar as TrendingItem[]} />
           </div>
         </section>

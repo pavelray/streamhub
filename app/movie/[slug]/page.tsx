@@ -116,17 +116,17 @@ const MovieDetailsPage = async ({
     return <div className="text-center text-white mt-20">Movie not found</div>;
   }
   return (
-    <div className="min-h-screen mt-24">
+    <div className="min-h-screen">
       <section
-        className="movie-hero min-h-screen flex items-center"
+        className="movie-hero min-h-screen flex items-start lg:items-center"
         style={{
           backgroundImage: `linear-gradient(to right,rgba(0, 0, 0, 0.8),rgba(0, 0, 0, 0.4),rgba(0, 0, 0, 0.8)),url(${movie.backdropPath})`,
         }}
       >
-        <div className="container mx-auto">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-10 lg:py-16">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8 lg:gap-12">
             {/* Movie Poster */}
-            <div className="lg:w-1/3 fade-in-up">
+            <div className="md:w-1/3 fade-in-up">
               <div className="glass-effect rounded-2xl p-4">
                 <Image
                   src={movie.posterPath}
@@ -140,14 +140,14 @@ const MovieDetailsPage = async ({
             </div>
 
             {/* Movie Details */}
-            <div className="lg:w-2/3 fade-in-up">
-              <h1 className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+            <div className="md:w-2/3 fade-in-up">
+              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
                 {movie.title}
               </h1>
               <h4 className="text-lg font-bold text-gray-300 mb-4 italic">
                 {movie.tagline}
               </h4>
-              <p className="text-lg lg:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl">
                 {movie.overview}
               </p>
               <div className="flex flex-wrap gap-6 text-sm font-medium mb-8">
@@ -225,13 +225,13 @@ const MovieDetailsPage = async ({
                   <h2 className="text-white text-xl font-bold">Cast & Crew</h2>
                 </div>
 
-                <div className="flex gap-6">
+                <div className="flex flex-wrap gap-4 sm:gap-6">
                   {movie.cast?.slice(0, 5).map((member, index) => (
                     <div
                       key={index}
-                      className="flex flex-col items-center w-20 cursor-pointer"
+                      className="flex flex-col items-center w-16 sm:w-20 cursor-pointer"
                     >
-                      <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-purple-400 shadow-lg hover:border-purple-300 transition-all hover:scale-110">
+                      <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-purple-400 shadow-lg hover:border-purple-300 transition-all hover:scale-110">
                         {member.profilePath ? (
                           <img
                             src={member.profilePath}
@@ -276,7 +276,7 @@ const MovieDetailsPage = async ({
       {/* Videos Section */}
       <section className="py-16 px-6 lg:px-8">
         <div className="container mx-auto">
-          <h2 className="section-title text-4xl lg:text-5xl mb-12">
+          <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-12">
             Videos & Trailers
           </h2>
 
@@ -292,7 +292,7 @@ const MovieDetailsPage = async ({
       {movie.recommendations && !!movie.recommendations.length && (
         <section className="py-16 px-6 lg:px-8">
           <div className="container mx-auto">
-            <h2 className="section-title text-4xl lg:text-5xl mb-6">
+            <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-6">
               Recommended For You
             </h2>
             <TrendingCarousel
@@ -304,7 +304,7 @@ const MovieDetailsPage = async ({
       {movie.similar && !!movie.similar.length && (
         <section className="py-16 px-6 lg:px-8">
           <div className="container mx-auto">
-            <h2 className="section-title text-4xl lg:text-5xl mb-6">
+            <h2 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-6">
               More Like This
             </h2>
             <TrendingCarousel trendingItems={movie.similar as TrendingItem[]} />

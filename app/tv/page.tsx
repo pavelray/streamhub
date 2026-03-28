@@ -27,9 +27,9 @@ export default async function TVPage() {
   const { popular, topRated, airingToday, onTheAir } = await getTVLists();
 
   return (
-    <div className="min-h-screen mt-24">
+    <div className="min-h-screen mt-20 sm:mt-24">
       <div className="px-6 lg:px-8 mb-8">
-        <h1 className="section-title text-4xl lg:text-5xl">TV Shows</h1>
+        <h1 className="section-title text-3xl sm:text-4xl lg:text-5xl">TV Shows</h1>
       </div>
       <RowContainer title="Airing Today" type="tv">
         <TrendingCarousel trendingItems={addMediaType(airingToday.results) as TrendingItem[]} />

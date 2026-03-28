@@ -133,7 +133,7 @@ export default function MoodSearch() {
         <button
           onClick={() => handleSearch(mood)}
           disabled={!mood.trim() || loading}
-          className="flex items-center gap-2 px-6 py-4 rounded-2xl font-semibold text-sm text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+          className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-4 rounded-2xl font-semibold text-sm text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
           style={{ background: "var(--color-header-gradient)" }}
         >
           {loading ? (

@@ -168,11 +168,11 @@ function DiscoverInner() {
   ).length;
 
   return (
-    <div className="min-h-screen mt-24">
-      <div className="container mx-auto px-6 lg:px-8 max-w-7xl">
+    <div className="min-h-screen mt-20 sm:mt-24">
+      <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="section-title text-4xl lg:text-5xl mb-2">Discover</h1>
+          <h1 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-2">Discover</h1>
           <p className="text-gray-400">Find exactly what you want with powerful filters</p>
         </div>
 
@@ -237,7 +237,7 @@ function DiscoverInner() {
           </div>
 
           {/* Always-visible quick filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <select
               value={filters.genre}
               onChange={(e) => updateFilter("genre", e.target.value)}
@@ -280,7 +280,7 @@ function DiscoverInner() {
 
           {/* Advanced filters */}
           {showFilters && (
-            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {/* Streaming Provider */}
               <div>
                 <label className="text-gray-400 text-xs uppercase tracking-wider mb-2 block">Streaming On</label>

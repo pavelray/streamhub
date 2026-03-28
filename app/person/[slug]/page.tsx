@@ -145,13 +145,13 @@ export default async function PersonPage({
   const photos = (person.images?.profiles || []).slice(0, 10);
 
   return (
-    <div className="min-h-screen mt-24">
+    <div className="min-h-screen mt-20 sm:mt-24">
       {/* Hero Section */}
-      <section className="py-16 px-6 lg:px-8">
+      <section className="py-10 sm:py-16 px-4 sm:px-6 md:px-8">
         <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col lg:flex-row gap-12">
+          <div className="flex flex-col md:flex-row gap-8 lg:gap-12">
             {/* Profile Image */}
-            <div className="lg:w-64 flex-shrink-0">
+            <div className="md:w-48 lg:w-64 flex-shrink-0">
               <div className="glass-effect rounded-2xl p-4">
                 {person.profile_path ? (
                   <Image
@@ -215,7 +215,7 @@ export default async function PersonPage({
 
             {/* Main Content */}
             <div className="flex-1">
-              <h1 className="text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
                 {person.name}
               </h1>
 
@@ -265,7 +265,7 @@ export default async function PersonPage({
       {photos.length > 1 && (
         <section className="py-8 px-6 lg:px-8">
           <div className="container mx-auto max-w-7xl">
-            <h2 className="section-title text-3xl lg:text-4xl mb-8">Photos</h2>
+            <h2 className="section-title text-2xl sm:text-3xl lg:text-4xl mb-8">Photos</h2>
             <div className="flex gap-4 overflow-x-auto pb-4">
               {photos.map((photo, i) => (
                 <div key={i} className="flex-shrink-0 w-36 rounded-xl overflow-hidden">
@@ -289,7 +289,7 @@ export default async function PersonPage({
           <div className="container mx-auto max-w-7xl">
             <div className="flex items-center gap-3 mb-8">
               <Film className="w-6 h-6 text-pink-400" />
-              <h2 className="section-title text-3xl lg:text-4xl">Acting Credits</h2>
+              <h2 className="section-title text-2xl sm:text-3xl lg:text-4xl">Acting Credits</h2>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
               {actingCredits.slice(0, 24).map((credit) => {
@@ -341,7 +341,7 @@ export default async function PersonPage({
           <div className="container mx-auto max-w-7xl">
             <div className="flex items-center gap-3 mb-8">
               <Film className="w-6 h-6 text-cyan-400" />
-              <h2 className="section-title text-3xl lg:text-4xl">Directed</h2>
+              <h2 className="section-title text-2xl sm:text-3xl lg:text-4xl">Directed</h2>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
               {directorCredits.slice(0, 16).map((credit) => {

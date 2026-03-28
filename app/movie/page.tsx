@@ -27,9 +27,9 @@ export default async function MoviesPage() {
   const { popular, topRated, nowPlaying, upcoming } = await getMovieLists();
 
   return (
-    <div className="min-h-screen mt-24">
+    <div className="min-h-screen mt-20 sm:mt-24">
       <div className="px-6 lg:px-8 mb-8">
-        <h1 className="section-title text-4xl lg:text-5xl">Movies</h1>
+        <h1 className="section-title text-3xl sm:text-4xl lg:text-5xl">Movies</h1>
       </div>
       <RowContainer title="Now Playing" type="movie">
         <TrendingCarousel trendingItems={addMediaType(nowPlaying.results, "movie") as TrendingItem[]} />

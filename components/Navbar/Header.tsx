@@ -29,31 +29,33 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 px-4 py-3 ${
-        isScrolled ? "header-scrolled" : "header-default"
+      className={`fixed top-0 left-0 right-0 z-50 px-4 py-2 sm:py-3 ${
+        isScrolled || menuOpen ? "header-scrolled" : "header-default"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <nav className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+        <div className="flex items-center justify-between h-14 lg:h-16">
+
+          {/* Logo — left */}
           <div className="flex-shrink-0">
             <h1
-              className="text-2xl font-bold bg-clip-text text-transparent inline-block"
+              className="text-xl lg:text-2xl font-bold bg-clip-text text-transparent inline-block"
               style={{ backgroundImage: "var(--color-brand-gradient)" }}
             >
               <Link href="/">StreamHub</Link>
             </h1>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+          {/* Desktop Navigation — center */}
+          <div className="hidden lg:flex flex-1 items-center justify-center px-4">
+            <div className="flex items-center space-x-1 xl:space-x-6">
               {navItems.map(({ name, icon: Icon, link }) => (
                 <Link
                   key={name}
                   href={link}
-                  className="group flex items-center gap-2 text-[var(--color-white)] hover:text-cyan-400 px-3 py-2 text-sm font-medium transition-all duration-300 relative"
+                  className="group flex items-center gap-1.5 text-[var(--color-white)] hover:text-cyan-400 px-2 xl:px-3 py-2 text-sm font-medium transition-all duration-300 relative whitespace-nowrap"
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4 flex-shrink-0" />
                   {name}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 bg-gradient-to-r from-cyan-400 to-purple-400"></span>
                 </Link>
@@ -61,20 +63,31 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
             </div>
           </div>
 
-          {/* Search + Watchlist + Theme */}
-          <div className="flex items-center gap-2">
-            <form onSubmit={handleSearch} className="relative hidden sm:block">
+          {/* Right — Search + Watchlist + Theme + Hamburger */}
+          <div className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0">
+
+            {/* Inline search — only xl+ (1280px) has room alongside nav */}
+            <form onSubmit={handleSearch} className="relative hidden xl:block">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+                <Search className="h-4 w-4 text-gray-400" />
               </div>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search movies, TV shows..."
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-2 pl-10 pr-4 text-sm text-[var(--color-white)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 focus:bg-white/15 transition-all duration-300 w-52 lg:w-64"
+                placeholder="Search..."
+                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-2 pl-9 pr-4 text-sm text-[var(--color-white)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 focus:bg-white/15 transition-all duration-300 w-48"
               />
             </form>
+
+            {/* Search icon — at lg (1024-1279px) goes to /search page */}
+            <Link
+              href="/search"
+              className="hidden lg:flex xl:hidden items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
+              aria-label="Search"
+            >
+              <Search className="w-4 h-4 text-white" />
+            </Link>
 
             <Link
               href="/watchlist"
@@ -94,8 +107,9 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
 
             <ThemeSwitchButton />
 
+            {/* Hamburger — mobile and tablet (<lg) */}
             <button
-              className="md:hidden ml-2 p-2 rounded focus:outline-none"
+              className="lg:hidden ml-1 p-2 rounded focus:outline-none"
               onClick={() => setMenuOpen((x) => !x)}
               aria-label="Open menu"
             >
@@ -117,15 +131,15 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile/Tablet Menu (<lg) */}
         {menuOpen && (
-          <div className="md:hidden mt-2 pb-4">
+          <div className="lg:hidden mt-2 pb-4 border-t border-white/10 pt-3">
             <div className="flex flex-col gap-1">
               {navItems.map(({ name, icon: Icon, link }) => (
                 <Link
                   key={name}
                   href={link}
-                  className="flex items-center gap-2 text-[var(--color-white)] hover:text-cyan-400 px-3 py-2 text-base font-medium transition-all duration-300"
+                  className="flex items-center gap-2 text-[var(--color-white)] hover:text-cyan-400 px-3 py-2.5 text-base font-medium transition-all duration-300 rounded-lg hover:bg-white/5"
                   onClick={() => setMenuOpen(false)}
                 >
                   <Icon className="w-5 h-5" />
@@ -134,7 +148,7 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
               ))}
               <Link
                 href="/watchlist"
-                className="flex items-center gap-2 text-[var(--color-white)] hover:text-cyan-400 px-3 py-2 text-base font-medium"
+                className="flex items-center gap-2 text-[var(--color-white)] hover:text-cyan-400 px-3 py-2.5 text-base font-medium rounded-lg hover:bg-white/5"
                 onClick={() => setMenuOpen(false)}
               >
                 <Bookmark className="w-5 h-5" />
@@ -149,7 +163,7 @@ export default function Header({ isScrolled }: { isScrolled: boolean }) {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search movies, TV shows..."
-                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-2 pl-10 pr-4 text-sm text-[var(--color-white)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 w-full"
+                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-2.5 pl-10 pr-4 text-sm text-[var(--color-white)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 w-full"
                 />
               </form>
             </div>

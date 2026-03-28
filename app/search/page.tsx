@@ -78,11 +78,11 @@ export default async function SearchPage({
   const people = results.filter((r) => r.media_type === "person");
 
   return (
-    <div className="min-h-screen mt-24 px-6 lg:px-8">
+    <div className="min-h-screen mt-20 sm:mt-24 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         {/* Search Header */}
         <div className="mb-10">
-          <h1 className="section-title text-4xl lg:text-5xl mb-4">
+          <h1 className="section-title text-3xl sm:text-4xl lg:text-5xl mb-4">
             {q ? `Results for "${q}"` : "Search"}
           </h1>
           {q && (
@@ -93,7 +93,7 @@ export default async function SearchPage({
         </div>
 
         {/* Search Bar */}
-        <form method="GET" action="/search" className="mb-12">
+        <form method="GET" action="/search" className="mb-8 sm:mb-12">
           <div className="relative max-w-2xl">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
@@ -101,11 +101,11 @@ export default async function SearchPage({
               defaultValue={q}
               placeholder="Search movies, TV shows, actors..."
               autoFocus
-              className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-4 pl-12 pr-6 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 focus:bg-white/15 transition-all duration-300 text-lg"
+              className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-full py-3 sm:py-4 pl-12 pr-24 sm:pr-28 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 focus:bg-white/15 transition-all duration-300 text-base sm:text-lg"
             />
             <button
               type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 rounded-full text-white font-semibold transition-all"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-white font-semibold transition-all text-sm sm:text-base"
               style={{ background: "var(--color-header-gradient)" }}
             >
               Search

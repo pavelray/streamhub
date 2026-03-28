@@ -21,7 +21,7 @@ const RowContainer = ({
         <div className="bg-gradient-to-r from-pink-500 to-rose-500 p-2 rounded-xl">
           {typeMap[type] || <Film className="w-6 h-6" />}
         </div>
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">
           {title}
         </h2>
       </div>

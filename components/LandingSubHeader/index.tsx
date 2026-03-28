@@ -2,10 +2,10 @@ import { Play } from "lucide-react";
 
 export const LandingSubHeader = () => {
   return (
-    <section className="relative py-20 px-4 text-center">
+    <section className="relative py-12 sm:py-20 px-4 text-center">
       <div className="max-w-4xl mx-auto  p-10 rounded-xl">
         <h1
-          className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent animate-pulse"
+          className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent animate-pulse"
           style={{
             backgroundImage: "var(--color-brand-gradient)",
           }}
@@ -13,7 +13,7 @@ export const LandingSubHeader = () => {
           StreamHub
         </h1>
 
-        <p className="text-xl md:text-2xl text-[var(--color-text-secondary)] mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg sm:text-xl md:text-2xl text-[var(--color-text-secondary)] mb-8 max-w-2xl mx-auto leading-relaxed">
           Your gateway to unlimited entertainment. Discover trending movies,
           binge-worthy series, and rising stars all in one place.
         </p>

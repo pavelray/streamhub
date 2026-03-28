@@ -67,7 +67,7 @@ export default async function Home() {
   );
 
   return (
-    <div className="min-h-screen mt-24">
+    <div className="min-h-screen mt-20 sm:mt-24">
       <LandingHeader item={headerItem} />
       <LandingSubHeader />
       <MoodSearch />
