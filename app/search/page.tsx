@@ -1,4 +1,4 @@
-import { TMDB_API_URL, APP_NAME, SEO_TAGS } from "@/utils/constants";
+import { TMDB_API_URL, APP_NAME, SEO_TAGS, TV_GENRES, MOVIE_GENRES } from "@/utils/constants";
 import { Search, Film, Tv, User } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
