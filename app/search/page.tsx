@@ -2,6 +2,7 @@ import { TMDB_API_URL, APP_NAME, SEO_TAGS } from "@/utils/constants";
 import { Search, Film, Tv, User } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import slugify from "slugify";
 import { SearchCard, PersonCard } from "./SearchCards";
 import type { SearchResult } from "./SearchCards";
 
