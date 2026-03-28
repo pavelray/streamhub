@@ -1,4 +1,5 @@
 "use client";
+import NSFWOverlay from "@/components/NSFWOverlay";
 import { TrendingItem } from "@/lib/Trending";
 import { BASE_IMAGE_URL } from "@/utils/constants";
 import {
@@ -101,6 +102,7 @@ const MediaCard = ({
           }
           className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg border border-white/20 hover:border-white/30 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
         >
+          <NSFWOverlay isAdult={item.adult}>
           <div className="aspect-[3/4] relative overflow-hidden rounded-t-2xl">
             <img
               src={`${BASE_IMAGE_URL}/w400/${
@@ -146,6 +148,7 @@ const MediaCard = ({
               </div>
             )}
           </div>
+          </NSFWOverlay>
 
           <div className="p-3">
             <h3 className="text-white font-bold text-sm mb-1 line-clamp-1">

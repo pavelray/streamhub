@@ -56,7 +56,7 @@ export async function generateMetadata({
   const slugParts = slug.split("-");
   const movieId = slugParts[slugParts.length - 1];
   const movie = await getMovieDetailsData(movieId);
-
+  console.log("Generating metadata for movie:", movie);
   if (!movie) {
     return { title: `Movie | ${APP_NAME}` };
   }

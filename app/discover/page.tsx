@@ -1,4 +1,5 @@
 "use client";
+import NSFWOverlay from "@/components/NSFWOverlay";
 import { BASE_IMAGE_URL, MOVIE_GENRES, TV_GENRES } from "@/utils/constants";
 import { Film, Filter, Loader2, Search, Star, Tv, X } from "lucide-react";
 import Image from "next/image";
@@ -27,6 +28,62 @@ interface DiscoverResult {
   first_air_date?: string;
   genre_ids: number[];
   overview: string;
+  adult?: boolean;
+}
+
+function DiscoverCard({
+  item,
+  type,
+}: {
+  item: DiscoverResult;
+  type: "movie" | "tv";
+}) {
+  const title = item.title || item.name || "Untitled";
+  const slug = `${slugify(title, { remove: /[*+~.'"!:@]/g })}-${item.id}`;
+  const href = type === "tv" ? `/tv/${slug}` : `/movie/${slug}`;
+  const year = (item.release_date || item.first_air_date || "").slice(0, 4);
+
+  return (
+    <Link href={href} className="group block">
+      <div className="glass-card rounded-xl overflow-hidden hover:scale-105 transition-all duration-300">
+        <div className="relative aspect-[2/3] bg-white/5">
+          <NSFWOverlay isAdult={item.adult}>
+            {item.poster_path ? (
+              <Image
+                src={`${BASE_IMAGE_URL}/w300${item.poster_path}`}
+                alt={title}
+                fill
+                className="object-cover"
+                sizes="200px"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                {type === "tv" ? (
+                  <Tv className="w-10 h-10 text-white/20" />
+                ) : (
+                  <Film className="w-10 h-10 text-white/20" />
+                )}
+              </div>
+            )}
+          </NSFWOverlay>
+          {item.vote_average > 0 && (
+            <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full bg-black/70 backdrop-blur-sm">
+              <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
+              <span className="text-yellow-400 text-xs font-bold">
+                {item.vote_average.toFixed(1)}
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="p-3">
+          <p className="text-white text-sm font-semibold truncate group-hover:text-cyan-300 transition-colors">
+            {title}
+          </p>
+          {year && <p className="text-gray-400 text-xs mt-1">{year}</p>}
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 interface Filters {
@@ -409,52 +466,9 @@ function DiscoverInner() {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            {results.map((item) => {
-              const title = item.title || item.name || "Untitled";
-              const slug = `${slugify(title, { remove: /[*+~.()'"!:@]/g })}-${item.id}`;
-              const href = filters.type === "tv" ? `/tv/${slug}` : `/movie/${slug}`;
-              const year = (item.release_date || item.first_air_date || "").slice(0, 4);
-
-              return (
-                <Link key={item.id} href={href} className="group block">
-                  <div className="glass-card rounded-xl overflow-hidden hover:scale-105 transition-all duration-300">
-                    <div className="relative aspect-[2/3] bg-white/5">
-                      {item.poster_path ? (
-                        <Image
-                          src={`${BASE_IMAGE_URL}/w300${item.poster_path}`}
-                          alt={title}
-                          fill
-                          className="object-cover"
-                          sizes="200px"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          {filters.type === "tv" ? (
-                            <Tv className="w-10 h-10 text-white/20" />
-                          ) : (
-                            <Film className="w-10 h-10 text-white/20" />
-                          )}
-                        </div>
-                      )}
-                      {item.vote_average > 0 && (
-                        <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full bg-black/70 backdrop-blur-sm">
-                          <Star className="w-3 h-3 text-yellow-400" fill="currentColor" />
-                          <span className="text-yellow-400 text-xs font-bold">
-                            {item.vote_average.toFixed(1)}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-3">
-                      <p className="text-white text-sm font-semibold truncate group-hover:text-cyan-300 transition-colors">
-                        {title}
-                      </p>
-                      {year && <p className="text-gray-400 text-xs mt-1">{year}</p>}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+            {results.map((item) => (
+              <DiscoverCard key={item.id} item={item} type={filters.type} />
+            ))}
           </div>
         )}
 
