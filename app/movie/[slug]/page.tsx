@@ -28,27 +28,35 @@ const append_to_response =
 const getMovieDetailsData = async (
   movieId: string
 ): Promise<MovieDetails | null> => {
+  const apiKeyPresent = !!process.env.TMDB_API_KEY;
   const url = `${TMDB_API_URL}/movie/${movieId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=${append_to_response}`;
+  console.log(`[Movie] Fetching movieId=${movieId} | TMDB_API_KEY present=${apiKeyPresent}`);
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const movieRes = await fetch(url, { next: { revalidate: 86400 } });
-      if (movieRes.status === 404) return null;
+      console.log(`[Movie] movieId=${movieId} attempt=${attempt + 1} status=${movieRes.status}`);
+      if (movieRes.status === 404) {
+        console.warn(`[Movie] movieId=${movieId} not found on TMDB (404)`);
+        return null;
+      }
       if (!movieRes.ok) {
+        const body = await movieRes.text().catch(() => "");
+        console.error(`[Movie] movieId=${movieId} attempt=${attempt + 1} FAILED status=${movieRes.status} body=${body.slice(0, 200)}`);
         if (attempt < 2) {
           await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
           continue;
         }
-        console.error(`Failed to fetch movie details: status ${movieRes.status}`);
         return null;
       }
       const movieData = await movieRes.json();
+      console.log(`[Movie] movieId=${movieId} fetched OK title="${movieData.title}"`);
       return movieDataTransformer(movieData);
     } catch (error) {
+      console.error(`[Movie] movieId=${movieId} attempt=${attempt + 1} exception:`, error);
       if (attempt < 2) {
         await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
         continue;
       }
-      console.error("Error fetching movie details:", error);
       return null;
     }
   }

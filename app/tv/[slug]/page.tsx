@@ -27,27 +27,35 @@ const append_to_response =
   "videos,aggregate_credits,recommendations,similar,watch/providers";
 
 const getTVDetailsData = async (tvId: string): Promise<TVDetails | null> => {
+  const apiKeyPresent = !!process.env.TMDB_API_KEY;
   const url = `${TMDB_API_URL}/tv/${tvId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=${append_to_response}`;
+  console.log(`[TV] Fetching tvId=${tvId} | TMDB_API_KEY present=${apiKeyPresent}`);
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       const res = await fetch(url, { next: { revalidate: 86400 } });
-      if (res.status === 404) return null;
+      console.log(`[TV] tvId=${tvId} attempt=${attempt + 1} status=${res.status}`);
+      if (res.status === 404) {
+        console.warn(`[TV] tvId=${tvId} not found on TMDB (404)`);
+        return null;
+      }
       if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        console.error(`[TV] tvId=${tvId} attempt=${attempt + 1} FAILED status=${res.status} body=${body.slice(0, 200)}`);
         if (attempt < 2) {
           await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
           continue;
         }
-        console.error(`Failed to fetch TV details: status ${res.status}`);
         return null;
       }
       const data = await res.json();
+      console.log(`[TV] tvId=${tvId} fetched OK name="${data.name}"`);
       return tvDataTransformer(data);
     } catch (error) {
+      console.error(`[TV] tvId=${tvId} attempt=${attempt + 1} exception:`, error);
       if (attempt < 2) {
         await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
         continue;
       }
-      console.error("Error fetching TV details:", error);
       return null;
     }
   }

@@ -43,14 +43,28 @@ interface CreditItem {
 }
 
 const getPersonDetails = async (personId: string): Promise<PersonDetails | null> => {
+  const apiKeyPresent = !!process.env.TMDB_API_KEY;
+  console.log(`[Person] Fetching personId=${personId} | TMDB_API_KEY present=${apiKeyPresent}`);
   try {
     const res = await fetch(
       `${TMDB_API_URL}/person/${personId}?api_key=${process.env.TMDB_API_KEY}&append_to_response=combined_credits,images`,
       { next: { revalidate: 86400 } }
     );
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
+    console.log(`[Person] personId=${personId} status=${res.status}`);
+    if (res.status === 404) {
+      console.warn(`[Person] personId=${personId} not found on TMDB (404)`);
+      return null;
+    }
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error(`[Person] personId=${personId} FAILED status=${res.status} body=${body.slice(0, 200)}`);
+      return null;
+    }
+    const data = await res.json();
+    console.log(`[Person] personId=${personId} fetched OK name="${data.name}"`);
+    return data;
+  } catch (error) {
+    console.error(`[Person] personId=${personId} exception:`, error);
     return null;
   }
 };
